@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
@@ -31,7 +31,16 @@ const allSidebarNav = [
 
 export default function AppLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [moreOpen, setMoreOpen] = useState(false);
+
+  const handleTabPress = (path) => {
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate(path);
+    }
+  };
 
   const { data: me } = useQuery({
     queryKey: ['me'],
@@ -60,7 +69,7 @@ export default function AppLayout() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                  "flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all duration-200",
                   isActive
                     ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-lg shadow-sidebar-primary/20"
                     : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
@@ -102,17 +111,17 @@ export default function AppLayout() {
           {primaryNav.map((item) => {
             const isActive = location.pathname === item.path;
             return (
-              <Link
+              <button
                 key={item.path}
-                to={item.path}
+                onClick={() => handleTabPress(item.path)}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+                  "flex flex-col items-center gap-1 px-3 min-h-[44px] rounded-xl transition-all",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
                 <item.icon className={cn("h-5 w-5", isActive && "drop-shadow-sm")} />
                 <span className="text-[10px] font-medium">{item.label}</span>
-              </Link>
+              </button>
             );
           })}
 
@@ -120,7 +129,7 @@ export default function AppLayout() {
           <button
             onClick={() => setMoreOpen(v => !v)}
             className={cn(
-              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+              "flex flex-col items-center gap-1 px-3 min-h-[44px] rounded-xl transition-all",
               moreOpen ? "text-primary" : "text-muted-foreground"
             )}
           >
@@ -129,15 +138,15 @@ export default function AppLayout() {
           </button>
 
           {/* Health Coach — icon only, bottom right */}
-          <Link
-            to="/coach"
+          <button
+            onClick={() => handleTabPress('/coach')}
             className={cn(
-              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+              "flex flex-col items-center gap-1 px-3 min-h-[44px] rounded-xl transition-all",
               location.pathname === '/coach' ? "text-primary" : "text-muted-foreground"
             )}
           >
             <Sparkles className={cn("h-5 w-5", location.pathname === '/coach' && "drop-shadow-sm")} />
-          </Link>
+          </button>
         </div>
       </nav>
 

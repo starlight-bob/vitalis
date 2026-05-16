@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import PullToRefresh from '@/components/layout/PullToRefresh';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Search, FlaskConical, SlidersHorizontal, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -46,6 +47,7 @@ export default function LabResults() {
   }, [filtered]);
 
   return (
+    <PullToRefresh queryKeys={[['labResults']]}>
     <div className="space-y-6">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
@@ -176,5 +178,6 @@ export default function LabResults() {
         )}
       </AnimatePresence>
     </div>
+    </PullToRefresh>
   );
 }

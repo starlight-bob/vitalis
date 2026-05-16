@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { calculateRecoveryScore, formatDateShort } from '@/lib/healthUtils';
 import TrendChart from '@/components/trends/TrendChart';
+import PullToRefresh from '@/components/layout/PullToRefresh';
 
 const CHART_CONFIGS = [
   { key: 'recovery', name: 'Recovery Score', color: '#22c55e', unit: '' },
@@ -54,6 +55,7 @@ export default function Trends() {
   }
 
   return (
+    <PullToRefresh queryKeys={[['healthLogs', 'all']]}>
     <div className="space-y-8">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-8 md:pt-0">
@@ -108,5 +110,6 @@ export default function Trends() {
         </div>
       )}
     </div>
+    </PullToRefresh>
   );
 }

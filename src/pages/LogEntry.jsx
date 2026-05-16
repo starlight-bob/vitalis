@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, Activity, Moon, Star, Footprints, Flame, Save, Loader2, FileText, CheckCircle2 } from 'lucide-react';
+import MobileHeader from '@/components/layout/MobileHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -92,7 +93,8 @@ export default function LogEntry() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="pt-8 md:pt-0">
+      <MobileHeader title="Log Metrics" backTo="/" />
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="hidden md:block">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">Log Health Metrics</h1>
         <p className="text-muted-foreground mt-1">
           {existingLog ? 'Update your entry for this date' : 'Record your daily vitals'}
