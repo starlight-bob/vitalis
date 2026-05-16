@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import MobileProfileButton from '@/components/account/MobileProfileButton';
+import MobileWatchButton from '@/components/devices/MobileWatchButton';
 
 const primaryNav = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -91,6 +92,7 @@ export default function AppLayout() {
       </main>
 
       <MobileProfileButton user={me} />
+      <MobileWatchButton />
 
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-border z-30 safe-area-bottom">
