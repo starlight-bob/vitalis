@@ -7,7 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 const PLAN_BADGE = {
   Free: { label: 'Free', cls: 'text-muted-foreground' },
   Pro: { label: 'Pro', cls: 'text-primary' },
-  Elite: { label: 'Elite', cls: 'text-yellow-400' },
+  Elite: { label: 'Elite', cls: 'text-yellow-400' }
 };
 
 export default function SettingsSection({ user, onUpdate }) {
@@ -32,17 +32,17 @@ export default function SettingsSection({ user, onUpdate }) {
 
   const Row = ({ icon: RowIcon, label, right, onClick, linkTo, danger }) => {
     const Icon = RowIcon;
-    const content = (
-      <div
-        onClick={onClick}
-        className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-colors ${danger ? 'hover:bg-destructive/10' : 'hover:bg-muted/50'}`}
-      >
+    const content =
+    <div
+      onClick={onClick}
+      className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-colors ${danger ? 'hover:bg-destructive/10' : 'hover:bg-muted/50'}`}>
+      
         <Icon className={`h-4.5 w-4.5 flex-shrink-0 ${danger ? 'text-destructive' : 'text-muted-foreground'}`} />
         <span className={`flex-1 text-sm font-medium ${danger ? 'text-destructive' : 'text-foreground'}`}>{label}</span>
         <span className="text-xs text-muted-foreground">{right}</span>
         {!right && <ChevronRight className="h-4 w-4 text-muted-foreground" />}
-      </div>
-    );
+      </div>;
+
     if (linkTo) return <Link to={linkTo}>{content}</Link>;
     return content;
   };
@@ -57,11 +57,11 @@ export default function SettingsSection({ user, onUpdate }) {
           <Zap className="h-4.5 w-4.5 text-muted-foreground flex-shrink-0" />
           <span className="flex-1 text-sm font-medium text-foreground">Current Plan</span>
           <span className={`text-xs font-bold ${PLAN_BADGE[plan].cls}`}>{plan}</span>
-          {plan === 'Free' && (
-            <button className="ml-2 text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+          {plan === 'Free' &&
+          <button className="ml-2 text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
               Upgrade
             </button>
-          )}
+          }
         </div>
 
         {/* Notifications */}
@@ -70,8 +70,8 @@ export default function SettingsSection({ user, onUpdate }) {
           <span className="flex-1 text-sm font-medium text-foreground">Notifications</span>
           <button
             onClick={toggleNotif}
-            className={`relative h-5 w-9 rounded-full transition-colors ${notifications ? 'bg-primary' : 'bg-muted'}`}
-          >
+            className={`relative h-5 w-9 rounded-full transition-colors ${notifications ? 'bg-primary' : 'bg-muted'}`}>
+            
             <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${notifications ? 'translate-x-(-1)' : 'translate-x-0.5'}`} />
           </button>
         </div>
@@ -100,13 +100,13 @@ export default function SettingsSection({ user, onUpdate }) {
           icon={LogOut}
           label="Sign Out"
           danger
-          onClick={() => base44.auth.logout()}
-        />
+          onClick={() => base44.auth.logout()} />
+        
       </div>
 
       {/* Danger zone */}
       <div>
-        <h3 className="text-xs font-semibold text-destructive uppercase tracking-widest mb-2">Danger Zone</h3>
+        <h3 className="text-xs font-semibold text-destructive uppercase tracking-widest mb-2 hidden">Danger Zone</h3>
         <div className="bg-card border border-destructive/30 rounded-2xl overflow-hidden">
           <Row
             icon={Trash2}
@@ -116,10 +116,10 @@ export default function SettingsSection({ user, onUpdate }) {
               if (window.confirm('Are you sure you want to permanently delete your account? This cannot be undone.')) {
                 base44.auth.logout();
               }
-            }}
-          />
+            }} />
+          
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
