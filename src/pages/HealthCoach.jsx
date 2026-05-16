@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { buildHealthContext } from '@/lib/buildHealthContext';
+import { buildFullContext } from '@/lib/buildHealthContext';
 import ChatMessage from '@/components/coach/ChatMessage';
 import TypingIndicator from '@/components/coach/TypingIndicator';
 import SuggestedPrompts from '@/components/coach/SuggestedPrompts';
@@ -43,6 +43,7 @@ I've reviewed your recent health data and I'm ready to help you understand what 
 - 🌙 Sleep quality analysis  
 - 🏋️ Training readiness assessment
 - 📈 Trend spotting and anomaly detection
+- 🧪 Interpreting your lab results and medical records
 - ❓ Answering any health questions based on your data
 
 What would you like to explore?`,
@@ -59,6 +60,11 @@ export default function HealthCoach() {
   const { data: logs = [] } = useQuery({
     queryKey: ['healthLogs', 'all'],
     queryFn: () => base44.entities.HealthLog.list('-date', 60),
+  });
+
+  const { data: labResults = [] } = useQuery({
+    queryKey: ['labResults'],
+    queryFn: () => base44.entities.LabResult.list('-date', 200),
   });
 
   useEffect(() => {
@@ -79,7 +85,7 @@ export default function HealthCoach() {
     setInput('');
     setIsLoading(true);
 
-    const healthContext = buildHealthContext(logs);
+    const healthContext = buildFullContext(logs, labResults);
 
     const fullPrompt = `${SYSTEM_PROMPT}
 
@@ -120,7 +126,7 @@ Coach:`;
     <div className="flex flex-col h-[calc(100vh-3rem)] md:h-[calc(100vh-3rem)] max-h-[900px] -mt-6 -mx-4 sm:-mx-6 lg:-mx-8 bg-background">
       {/* Inner container */}
       <div className="flex flex-col flex-1 overflow-hidden max-w-3xl mx-auto w-full px-4 sm:px-6 pt-6">
-        <CoachHeader logsCount={logs.length} />
+        <CoachHeader logsCount={logs.length} labCount={labResults.length} />
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto py-6 space-y-5 scrollbar-thin">

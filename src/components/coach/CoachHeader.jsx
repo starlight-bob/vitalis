@@ -1,7 +1,7 @@
 import { Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function CoachHeader({ logsCount }) {
+export default function CoachHeader({ logsCount, labCount = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -17,8 +17,8 @@ export default function CoachHeader({ logsCount }) {
           <div className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <p className="text-xs text-muted-foreground">
-              {logsCount > 0
-                ? `Analyzing ${logsCount} days of your data`
+              {logsCount > 0 || labCount > 0
+                ? `${logsCount} health logs · ${labCount} lab record${labCount !== 1 ? 's' : ''} in context`
                 : 'Ready to help — log some data to unlock insights'}
             </p>
           </div>

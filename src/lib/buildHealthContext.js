@@ -1,9 +1,28 @@
 import { calculateRecoveryScore } from './healthUtils';
-import { format, subDays } from 'date-fns';
 
 /**
  * Builds a rich text summary of the user's health data to inject into the LLM prompt
  */
+export function buildLabContext(labResults) {
+  if (!labResults || labResults.length === 0) return null;
+
+  const sorted = [...labResults].sort((a, b) => b.date.localeCompare(a.date));
+  const lines = sorted.map(r => {
+    const parts = [`  [${r.date}] ${r.category}: ${r.title}`];
+    if (r.notes) parts.push(`    Notes: "${r.notes}"`);
+    return parts.join('\n');
+  }).join('\n');
+
+  return `
+=== LAB RESULTS & MEDICAL RECORDS ===
+${sorted.length} records on file:
+
+${lines}
+
+You can reference these lab results when the user asks about their health history, biomarkers, or medical findings. Interpret any blood work, imaging, hormone panels or other results in the context of their daily metrics.
+=====================================`.trim();
+}
+
 export function buildHealthContext(logs) {
   if (!logs || logs.length === 0) {
     return 'The user has no logged health data yet.';
@@ -97,4 +116,10 @@ ${anomalies.length ? `DETECTED ANOMALIES / FLAGS:\n${anomalies.map(a => `- âš ï¸
 DATA COVERAGE: ${logs.length} total logged days
 =================================
 `.trim();
+}
+
+export function buildFullContext(logs, labResults) {
+  const healthCtx = buildHealthContext(logs);
+  const labCtx = buildLabContext(labResults);
+  return labCtx ? `${healthCtx}\n\n${labCtx}` : healthCtx;
 }
