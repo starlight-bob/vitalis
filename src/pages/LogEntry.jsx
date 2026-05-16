@@ -60,6 +60,19 @@ export default function LogEntry() {
       }
       return base44.entities.HealthLog.create(data);
     },
+    onMutate: async (data) => {
+      await queryClient.cancelQueries({ queryKey: ['healthLogs'] });
+      const prev = queryClient.getQueryData(['healthLogs', 'today']);
+      queryClient.setQueryData(['healthLogs', 'today'], (old = []) => {
+        const optimistic = { ...data, id: existingLog?.id || '__optimistic__' };
+        if (existingLog) return old.map(l => l.id === existingLog.id ? optimistic : l);
+        return [optimistic, ...old];
+      });
+      return { prev };
+    },
+    onError: (_err, _data, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(['healthLogs', 'today'], ctx.prev);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['healthLogs'] });
       setSaved(true);

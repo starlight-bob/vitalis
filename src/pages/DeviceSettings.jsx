@@ -2,10 +2,23 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Watch, RefreshCw, Trash2, Plus, ChevronLeft, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Watch, RefreshCw, Trash2, Plus, ChevronLeft, CheckCircle2, XCircle, Clock, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+
+const FREQ_OPTIONS = [
+  { value: '5min',  label: 'Every 5 min' },
+  { value: '15min', label: 'Every 15 min' },
+  { value: '30min', label: 'Every 30 min' },
+  { value: '1hr',   label: 'Every hour' },
+];
 
 const MOCK_BATTERY = 72;
 const MOCK_FIRMWARE = 'v4.12.1';
@@ -56,6 +69,8 @@ export default function DeviceSettings() {
   const [bgSync, setBgSync] = useState(true);
   const [wifiOnly, setWifiOnly] = useState(false);
   const [syncFreq, setSyncFreq] = useState('15min');
+  const [freqSheetOpen, setFreqSheetOpen] = useState(false);
+  const [removeTarget, setRemoveTarget] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: connections = [] } = useQuery({
@@ -68,6 +83,17 @@ export default function DeviceSettings() {
 
   const removeMutation = useMutation({
     mutationFn: async (conn) => base44.entities.DeviceConnection.update(conn.id, { connected: false }),
+    onMutate: async (conn) => {
+      await queryClient.cancelQueries({ queryKey: ['deviceConnections'] });
+      const prev = queryClient.getQueryData(['deviceConnections']);
+      queryClient.setQueryData(['deviceConnections'], (old = []) =>
+        old.map(c => c.id === conn.id ? { ...c, connected: false } : c)
+      );
+      return { prev };
+    },
+    onError: (_err, _conn, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(['deviceConnections'], ctx.prev);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deviceConnections'] });
       toast.success('Device removed');
@@ -181,7 +207,7 @@ export default function DeviceSettings() {
                     </div>
                   </div>
                   <button
-                    onClick={() => removeMutation.mutate(conn)}
+                    onClick={() => setRemoveTarget(conn)}
                     className="h-7 w-7 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-red-50 hover:text-red-400 text-slate-400 transition-colors"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -239,16 +265,13 @@ export default function DeviceSettings() {
                 <p className="text-sm font-medium text-slate-800">Sync Frequency</p>
                 <p className="text-[10px] text-slate-400">How often to check for new data</p>
               </div>
-              <select
-                value={syncFreq}
-                onChange={e => setSyncFreq(e.target.value)}
-                className="bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-lg px-2.5 py-1.5 outline-none"
+              <button
+                onClick={() => setFreqSheetOpen(true)}
+                className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-lg px-2.5 py-1.5"
               >
-                <option value="5min">Every 5 min</option>
-                <option value="15min">Every 15 min</option>
-                <option value="30min">Every 30 min</option>
-                <option value="1hr">Every hour</option>
-              </select>
+                {FREQ_OPTIONS.find(o => o.value === syncFreq)?.label}
+                <ChevronDown className="h-3 w-3 text-slate-400" />
+              </button>
             </div>
           </div>
         </motion.div>
@@ -276,6 +299,49 @@ export default function DeviceSettings() {
         </motion.div>
 
       </div>
+
+      {/* Sync Frequency Sheet */}
+      <Sheet open={freqSheetOpen} onOpenChange={setFreqSheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl safe-bottom">
+          <SheetHeader className="mb-4">
+            <SheetTitle>Sync Frequency</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-1 pb-2">
+            {FREQ_OPTIONS.map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => { setSyncFreq(opt.value); setFreqSheetOpen(false); }}
+                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                  syncFreq === opt.value ? 'bg-emerald-50 text-emerald-700' : 'hover:bg-slate-50 text-slate-800'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Remove Device AlertDialog */}
+      <AlertDialog open={!!removeTarget} onOpenChange={open => !open && setRemoveTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Device?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will disconnect <strong>{removeTarget?.device_name}</strong>. You can reconnect it at any time.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setRemoveTarget(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => { removeMutation.mutate(removeTarget); setRemoveTarget(null); }}
+            >
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
