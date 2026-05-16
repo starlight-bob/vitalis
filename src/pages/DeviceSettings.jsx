@@ -116,13 +116,13 @@ export default function DeviceSettings() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 pb-32">
+    <div className="min-h-screen bg-background text-foreground pb-32">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-slate-100 px-4 py-4 flex items-center gap-3">
-        <Link to="/" className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors">
-          <ChevronLeft className="h-4 w-4 text-slate-600" />
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border px-4 py-4 flex items-center gap-3">
+        <Link to="/" className="h-8 w-8 rounded-full bg-muted flex items-center justify-center hover:bg-accent transition-colors">
+          <ChevronLeft className="h-4 w-4 text-muted-foreground" />
         </Link>
-        <h1 className="text-base font-semibold tracking-tight text-slate-900">Device Settings</h1>
+        <h1 className="text-base font-semibold tracking-tight text-foreground">Device Settings</h1>
       </div>
 
       <div className="px-4 py-6 space-y-6">
@@ -130,14 +130,14 @@ export default function DeviceSettings() {
         {/* Connected Device Card */}
         {primary ? (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+            className="bg-card border border-border rounded-2xl p-5 space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                   <Watch className="h-5 w-5 text-emerald-500" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-slate-900">{primary.device_name}</p>
+                  <p className="font-semibold text-sm text-foreground">{primary.device_name}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[11px] text-emerald-600">Connected</span>
@@ -160,7 +160,7 @@ export default function DeviceSettings() {
                 <span className="text-[11px] text-slate-400">Battery</span>
                 <span className="text-[11px] text-slate-600 font-medium">{MOCK_BATTERY}%</span>
               </div>
-              <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                 <motion.div
                   className={`h-full rounded-full ${getBatteryColor(MOCK_BATTERY)}`}
                   initial={{ width: 0 }}
@@ -171,13 +171,13 @@ export default function DeviceSettings() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white border border-slate-100 rounded-xl p-3">
-                <p className="text-[10px] text-slate-400 mb-0.5">Firmware</p>
-                <p className="text-xs font-medium text-slate-800">{MOCK_FIRMWARE}</p>
+              <div className="bg-muted border border-border rounded-xl p-3">
+                <p className="text-[10px] text-muted-foreground mb-0.5">Firmware</p>
+                <p className="text-xs font-medium text-foreground">{MOCK_FIRMWARE}</p>
               </div>
-              <div className="bg-white border border-slate-100 rounded-xl p-3">
-                <p className="text-[10px] text-slate-400 mb-0.5">Last Sync</p>
-                <p className="text-xs font-medium text-slate-800">
+              <div className="bg-muted border border-border rounded-xl p-3">
+                <p className="text-[10px] text-muted-foreground mb-0.5">Last Sync</p>
+                <p className="text-xs font-medium text-foreground">
                   {primary.last_sync
                     ? formatDistanceToNow(new Date(primary.last_sync), { addSuffix: true })
                     : 'Never'}
@@ -186,9 +186,9 @@ export default function DeviceSettings() {
             </div>
           </motion.div>
         ) : (
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
-            <Watch className="h-8 w-8 text-slate-300 mx-auto mb-2" />
-            <p className="text-sm text-slate-400">No device connected</p>
+          <div className="bg-card border border-border rounded-2xl p-5 text-center">
+            <Watch className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">No device connected</p>
           </div>
         )}
 
@@ -196,19 +196,19 @@ export default function DeviceSettings() {
         {connections.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">My Devices</p>
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
               {connections.map((conn) => (
                 <div key={conn.id} className="flex items-center justify-between px-4 py-3.5">
                   <div className="flex items-center gap-3">
-                    <span className={`h-2 w-2 rounded-full ${conn.connected ? 'bg-emerald-400' : 'bg-slate-300'}`} />
+                    <span className={`h-2 w-2 rounded-full ${conn.connected ? 'bg-emerald-400' : 'bg-muted-foreground'}`} />
                     <div>
-                      <p className="text-sm font-medium text-slate-800">{conn.device_name}</p>
-                      <p className="text-[10px] text-slate-400">{conn.connected ? 'Active' : 'Disconnected'}</p>
+                      <p className="text-sm font-medium text-foreground">{conn.device_name}</p>
+                      <p className="text-[10px] text-muted-foreground">{conn.connected ? 'Active' : 'Disconnected'}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => setRemoveTarget(conn)}
-                    className="h-7 w-7 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-red-50 hover:text-red-400 text-slate-400 transition-colors"
+                    className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center hover:bg-destructive/10 hover:text-destructive text-muted-foreground transition-colors"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -221,21 +221,21 @@ export default function DeviceSettings() {
         {/* Add New Device */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">Add New Device</p>
-          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {ADD_DEVICES.map((d) => (
               <button
                 key={d.id}
                 onClick={() => handleAdd(d)}
-                className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-slate-50 transition-colors text-left"
+                className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-muted transition-colors text-left"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-lg leading-none">{d.icon}</span>
                   <div>
-                    <p className="text-sm font-medium text-slate-800">{d.name}</p>
-                    <p className="text-[10px] text-slate-400">{d.sub}</p>
+                    <p className="text-sm font-medium text-foreground">{d.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{d.sub}</p>
                   </div>
                 </div>
-                <Plus className="h-4 w-4 text-slate-300" />
+                <Plus className="h-4 w-4 text-muted-foreground" />
               </button>
             ))}
           </div>
@@ -244,7 +244,7 @@ export default function DeviceSettings() {
         {/* Sync Settings */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
           <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">Sync Settings</p>
-          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {[
               { label: 'Auto-Sync', sub: 'Automatically sync when in range', val: autoSync, set: setAutoSync },
               { label: 'Background Sync', sub: 'Sync while app is in background', val: bgSync, set: setBgSync },
@@ -252,8 +252,8 @@ export default function DeviceSettings() {
             ].map(({ label, sub, val, set }) => (
               <div key={label} className="flex items-center justify-between px-4 py-3.5">
                 <div>
-                  <p className="text-sm font-medium text-slate-800">{label}</p>
-                  <p className="text-[10px] text-slate-400">{sub}</p>
+                  <p className="text-sm font-medium text-foreground">{label}</p>
+                  <p className="text-[10px] text-muted-foreground">{sub}</p>
                 </div>
                 <Toggle enabled={val} onToggle={() => set(v => !v)} />
               </div>
@@ -262,12 +262,12 @@ export default function DeviceSettings() {
             {/* Sync Frequency */}
             <div className="flex items-center justify-between px-4 py-3.5">
               <div>
-                <p className="text-sm font-medium text-slate-800">Sync Frequency</p>
-                <p className="text-[10px] text-slate-400">How often to check for new data</p>
+                <p className="text-sm font-medium text-foreground">Sync Frequency</p>
+                <p className="text-[10px] text-muted-foreground">How often to check for new data</p>
               </div>
               <button
                 onClick={() => setFreqSheetOpen(true)}
-                className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-lg px-2.5 py-1.5"
+                className="flex items-center gap-1.5 bg-muted border border-border text-foreground text-xs rounded-lg px-2.5 py-1.5"
               >
                 {FREQ_OPTIONS.find(o => o.value === syncFreq)?.label}
                 <ChevronDown className="h-3 w-3 text-slate-400" />
@@ -279,17 +279,17 @@ export default function DeviceSettings() {
         {/* Sync Log */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">Sync Log</p>
-          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {MOCK_SYNC_LOG.map((entry) => (
               <div key={entry.id} className="flex items-center gap-3 px-4 py-3">
                 {entry.status === 'success'
                   ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
-                  : <XCircle className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />}
+                  : <XCircle className="h-3.5 w-3.5 text-destructive flex-shrink-0" />}
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-slate-800 truncate">{entry.device}</p>
-                  <p className="text-[10px] text-slate-400">{entry.status === 'success' ? 'Sync successful' : 'Sync failed'}</p>
+                  <p className="text-xs font-medium text-foreground truncate">{entry.device}</p>
+                  <p className="text-[10px] text-muted-foreground">{entry.status === 'success' ? 'Sync successful' : 'Sync failed'}</p>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] text-slate-300 flex-shrink-0">
+                <div className="flex items-center gap-1 text-[10px] text-muted-foreground flex-shrink-0">
                   <Clock className="h-3 w-3" />
                   {formatDistanceToNow(entry.time, { addSuffix: true })}
                 </div>
