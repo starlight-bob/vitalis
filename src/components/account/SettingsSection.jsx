@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, Bell, Ruler, Plug, Shield, HelpCircle, LogOut, Zap } from 'lucide-react';
+import { ChevronRight, Bell, Ruler, Plug, Shield, HelpCircle, LogOut, Zap, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient } from '@tanstack/react-query';
@@ -102,6 +102,23 @@ export default function SettingsSection({ user, onUpdate }) {
           danger
           onClick={() => base44.auth.logout()}
         />
+      </div>
+
+      {/* Danger zone */}
+      <div>
+        <h3 className="text-xs font-semibold text-destructive uppercase tracking-widest mb-2">Danger Zone</h3>
+        <div className="bg-card border border-destructive/30 rounded-2xl overflow-hidden">
+          <Row
+            icon={Trash2}
+            label="Delete Account"
+            danger
+            onClick={() => {
+              if (window.confirm('Are you sure you want to permanently delete your account? This cannot be undone.')) {
+                base44.auth.logout();
+              }
+            }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
@@ -12,8 +13,34 @@ import { Link } from 'react-router-dom';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+const PULL_THRESHOLD = 70;
+
 export default function Dashboard() {
   const today = format(new Date(), 'yyyy-MM-dd');
+  const queryClient = useQueryClient();
+  const touchStartY = useRef(null);
+  const [pulling, setPulling] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleTouchStart = (e) => {
+    if (window.scrollY === 0) touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    if (touchStartY.current === null) return;
+    const delta = e.touches[0].clientY - touchStartY.current;
+    if (delta > PULL_THRESHOLD) setPulling(true);
+  };
+
+  const handleTouchEnd = async () => {
+    if (pulling) {
+      setPulling(false);
+      setRefreshing(true);
+      await queryClient.invalidateQueries({ queryKey: ['healthLogs'] });
+      setRefreshing(false);
+    }
+    touchStartY.current = null;
+  };
 
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ['healthLogs', 'today'],
@@ -32,7 +59,17 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <div
+      className="space-y-8"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {(pulling || refreshing) && (
+        <div className="flex justify-center py-2">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+        </div>
+      )}
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}

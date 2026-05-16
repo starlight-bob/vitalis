@@ -86,5 +86,20 @@
   }
   body {
     @apply bg-background text-foreground font-inter;
+    overscroll-behavior-y: none;
+  }
+  button, a {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+@layer utilities {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

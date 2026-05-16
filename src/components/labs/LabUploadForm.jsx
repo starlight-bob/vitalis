@@ -2,14 +2,16 @@ import { useState, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { X, Upload, FileText, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, Upload, FileText, Loader2, CheckCircle2, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+
+const isMobile = () => window.innerWidth < 768;
 
 const CATEGORIES = ['Blood Work', 'Imaging', 'Urine', 'Hormone Panel', 'Other'];
 
@@ -24,6 +26,7 @@ export default function LabUploadForm({ onClose, existing }) {
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const fileRef = useRef();
   const qc = useQueryClient();
 
@@ -106,14 +109,38 @@ export default function LabUploadForm({ onClose, existing }) {
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs text-muted-foreground uppercase tracking-wider">Category</Label>
-              <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v }))}>
-                <SelectTrigger className="bg-background border-border">
-                  <SelectValue placeholder="Select…" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                </SelectContent>
-              </Select>
+              <button
+                type="button"
+                onClick={() => setSheetOpen(true)}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-md border border-border bg-background text-sm text-foreground"
+              >
+                <span className={form.category ? 'text-foreground' : 'text-muted-foreground'}>
+                  {form.category || 'Select…'}
+                </span>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </button>
+              <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                <SheetContent side="bottom" className="rounded-t-2xl pb-safe">
+                  <SheetHeader className="mb-4">
+                    <SheetTitle>Select Category</SheetTitle>
+                  </SheetHeader>
+                  <div className="space-y-1">
+                    {CATEGORIES.map(c => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => { setForm(f => ({ ...f, category: c })); setSheetOpen(false); }}
+                        className={cn(
+                          'w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors',
+                          form.category === c ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-foreground'
+                        )}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
 

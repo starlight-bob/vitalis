@@ -91,11 +91,12 @@ export default function AppLayout() {
         </div>
       </main>
 
+      <div className="safe-top fixed top-0 left-0 right-0 z-40 pointer-events-none md:hidden" />
       <MobileProfileButton user={me} />
       <MobileWatchButton />
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-border z-30 safe-area-bottom">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-border z-30 safe-bottom">
         <div className="flex items-center justify-around py-2">
           {/* Primary nav items */}
           {primaryNav.map((item) => {
