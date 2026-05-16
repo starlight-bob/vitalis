@@ -1,9 +1,22 @@
+import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 
-const navItems = [
+const primaryNav = [
+  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { path: '/trends', icon: TrendingUp, label: 'Trends' },
+  { path: '/bio-age', icon: Dna, label: 'Bio Age' },
+];
+
+const moreNav = [
+  { path: '/log', icon: PlusCircle, label: 'Log Entry' },
+  { path: '/devices', icon: Plug, label: 'Connect Devices' },
+  { path: '/labs', icon: FlaskConical, label: 'Lab Results' },
+];
+
+const allSidebarNav = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/log', icon: PlusCircle, label: 'Log Entry' },
   { path: '/trends', icon: TrendingUp, label: 'Trends' },
@@ -15,6 +28,7 @@ const navItems = [
 
 export default function AppLayout() {
   const location = useLocation();
+  const [moreOpen, setMoreOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -31,7 +45,7 @@ export default function AppLayout() {
         </div>
 
         <nav className="flex-1 px-3 mt-4 space-y-1">
-          {navItems.map((item) => {
+          {allSidebarNav.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
@@ -72,17 +86,16 @@ export default function AppLayout() {
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-border z-30 safe-area-bottom">
         <div className="flex items-center justify-around py-2">
-          {navItems.map((item) => {
+          {/* Primary nav items */}
+          {primaryNav.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all",
-                  isActive
-                    ? "text-primary"
-                    : "text-muted-foreground"
+                  "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+                  isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
                 <item.icon className={cn("h-5 w-5", isActive && "drop-shadow-sm")} />
@@ -90,8 +103,59 @@ export default function AppLayout() {
               </Link>
             );
           })}
+
+          {/* More button */}
+          <button
+            onClick={() => setMoreOpen(v => !v)}
+            className={cn(
+              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+              moreOpen ? "text-primary" : "text-muted-foreground"
+            )}
+          >
+            {moreOpen ? <X className="h-5 w-5" /> : <MoreHorizontal className="h-5 w-5" />}
+            <span className="text-[10px] font-medium">More</span>
+          </button>
+
+          {/* Health Coach — icon only, bottom right */}
+          <Link
+            to="/coach"
+            className={cn(
+              "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+              location.pathname === '/coach' ? "text-primary" : "text-muted-foreground"
+            )}
+          >
+            <Sparkles className={cn("h-5 w-5", location.pathname === '/coach' && "drop-shadow-sm")} />
+          </Link>
         </div>
       </nav>
+
+      {/* More drawer — slides up */}
+      {moreOpen && (
+        <div className="md:hidden fixed inset-0 z-20" onClick={() => setMoreOpen(false)}>
+          <div
+            className="absolute bottom-16 inset-x-0 bg-card border-t border-border px-4 py-4 space-y-1 shadow-xl"
+            onClick={e => e.stopPropagation()}
+          >
+            {moreNav.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMoreOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all",
+                    isActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted"
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
