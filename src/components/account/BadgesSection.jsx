@@ -5,14 +5,14 @@ export default function BadgesSection({ badges }) {
   return (
     <div className="px-4">
       <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Achievements</h3>
-      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin">
+      <div className="grid grid-cols-2 gap-3">
         {badges.map((badge, i) => (
           <motion.div
             key={badge.id}
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.05 }}
-            className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-3 rounded-2xl border w-24 ${
+            className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border ${
               badge.earned
                 ? 'bg-card border-primary/20 shadow-sm shadow-primary/5'
                 : 'bg-muted/30 border-border opacity-60'
