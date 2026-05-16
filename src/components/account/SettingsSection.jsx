@@ -106,7 +106,7 @@ export default function SettingsSection({ user, onUpdate }) {
 
       {/* Danger zone */}
       <div>
-        <h3 className="text-xs font-semibold text-destructive uppercase tracking-widest mb-2 hidden">DANGER ZONE</h3>
+        
         <div className="bg-card border border-destructive/30 rounded-2xl overflow-hidden">
           <Row
             icon={Trash2}
