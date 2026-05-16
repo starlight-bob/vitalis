@@ -1,0 +1,48 @@
+{
+  "name": "HealthLog",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the health log entry"
+    },
+    "heart_rate_avg": {
+      "type": "number",
+      "description": "Average resting heart rate in BPM"
+    },
+    "hrv": {
+      "type": "number",
+      "description": "Heart rate variability in ms"
+    },
+    "sleep_duration": {
+      "type": "number",
+      "description": "Sleep duration in hours"
+    },
+    "sleep_quality": {
+      "type": "number",
+      "description": "Sleep quality score 1-10"
+    },
+    "steps": {
+      "type": "number",
+      "description": "Total steps for the day"
+    },
+    "workout_strain": {
+      "type": "number",
+      "description": "Workout strain score 0-21"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes for the day"
+    }
+  },
+  "required": [
+    "date",
+    "heart_rate_avg",
+    "hrv",
+    "sleep_duration",
+    "sleep_quality",
+    "steps",
+    "workout_strain"
+  ]
+}
