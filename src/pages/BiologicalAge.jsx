@@ -77,7 +77,7 @@ export default function BiologicalAge() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <BioAgeRadar systems={bioData.systems} chronoAge={bioData.chronoAge} />
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3">
           {bioData.systems.map((system, i) => (
             <SystemCard
               key={system.key}
