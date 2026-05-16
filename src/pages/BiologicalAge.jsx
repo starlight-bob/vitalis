@@ -53,7 +53,7 @@ export default function BiologicalAge() {
     <div className="space-y-6">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-8 md:pt-0">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-foreground">Biological Age</h1>
             <p className="text-muted-foreground mt-1">Your body's true age based on health biomarkers</p>
