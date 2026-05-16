@@ -37,7 +37,7 @@ export default function Dashboard() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
+        className="flex items-center justify-between pt-8 md:pt-0"
       >
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Today's Vitals</h1>
