@@ -10,16 +10,16 @@ import SyncButton from '@/components/devices/SyncButton';
 const DEVICES = [
   {
     id: 'apple_health',
-    name: 'Apple Health',
-    category: 'Smartphone Platform',
+    name: '苹果健康',
+    category: 'Apple Health',
     logo: '🍎',
     bgClass: 'bg-gradient-to-br from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30',
   },
   {
-    id: 'google_fit',
-    name: 'Google Fit',
-    category: 'Smartphone Platform',
-    logo: '💙',
+    id: 'huawei_health',
+    name: '华为',
+    category: '华为运动健康',
+    logo: '❤️',
     bgClass: 'bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30',
   },
   {
@@ -30,8 +30,8 @@ const DEVICES = [
     bgClass: 'bg-gradient-to-br from-slate-100 to-gray-200 dark:from-slate-800/50 dark:to-gray-800/50',
   },
   {
-    id: 'fitbit',
-    name: 'Fitbit',
+    id: 'google_fitbit',
+    name: 'Google Fitbit',
     category: 'Fitness Tracker',
     logo: '📟',
     bgClass: 'bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-teal-900/30 dark:to-cyan-900/30',
