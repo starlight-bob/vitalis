@@ -72,7 +72,7 @@ export default function SettingsSection({ user, onUpdate }) {
             onClick={toggleNotif}
             className={`relative h-5 w-9 rounded-full transition-colors ${notifications ? 'bg-primary' : 'bg-muted'}`}
           >
-            <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${notifications ? 'translate-x-1' : 'translate-x-0.5'}`} />
+            <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${notifications ? 'translate-x-(-1)' : 'translate-x-0.5'}`} />
           </button>
         </div>
 
