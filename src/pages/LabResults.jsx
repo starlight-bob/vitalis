@@ -19,10 +19,12 @@ export default function LabResults() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const { data: results = [], isLoading } = useQuery({
+  const { data: rawResults, isLoading } = useQuery({
     queryKey: ['labResults'],
     queryFn: () => base44.entities.LabResult.list('-date', 200),
   });
+
+  const results = Array.isArray(rawResults) ? rawResults : [];
 
   const filtered = useMemo(() => {
     return results

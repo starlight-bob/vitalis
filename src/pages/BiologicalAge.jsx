@@ -13,11 +13,12 @@ import BioAgeTrendChart from '@/components/bioage/BioAgeTrendChart';
 const CHRONO_AGE = 35;
 
 export default function BiologicalAge() {
-  const { data: logs = [], isLoading } = useQuery({
+  const { data: rawLogs, isLoading } = useQuery({
     queryKey: ['healthLogs', 'all'],
     queryFn: () => base44.entities.HealthLog.list('-date', 120),
   });
 
+  const logs = Array.isArray(rawLogs) ? rawLogs : [];
   const bioData = calculateBioAge(logs, CHRONO_AGE);
   const trendData = buildBioAgeTrend(logs, CHRONO_AGE);
 

@@ -16,10 +16,12 @@ import PullToRefresh from '@/components/layout/PullToRefresh';
 export default function Dashboard() {
   const today = format(new Date(), 'yyyy-MM-dd');
 
-  const { data: logs = [], isLoading } = useQuery({
+  const { data: rawLogs, isLoading } = useQuery({
     queryKey: ['healthLogs', 'today'],
     queryFn: () => base44.entities.HealthLog.filter({ date: today }, '-created_date', 1),
   });
+
+  const logs = Array.isArray(rawLogs) ? rawLogs : [];
 
   const todayLog = logs[0] || null;
   const recoveryScore = todayLog ? calculateRecoveryScore(todayLog) : null;

@@ -66,11 +66,12 @@ export default function ConnectDevices() {
   const [updatingIds, setUpdatingIds] = useState(new Set());
   const queryClient = useQueryClient();
 
-  const { data: connections = [], isLoading } = useQuery({
+  const { data: rawConnections, isLoading } = useQuery({
     queryKey: ['deviceConnections'],
     queryFn: () => base44.entities.DeviceConnection.list(),
   });
 
+  const connections = Array.isArray(rawConnections) ? rawConnections : [];
   const connectionMap = Object.fromEntries(connections.map(c => [c.device_id, c]));
 
   const connectMutation = useMutation({
