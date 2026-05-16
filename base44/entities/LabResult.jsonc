@@ -1,0 +1,47 @@
+{
+  "name": "LabResult",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the lab result (e.g. 'Blood Panel - March 2026')"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the test was performed"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Blood Work",
+        "Imaging",
+        "Urine",
+        "Hormone Panel",
+        "Other"
+      ],
+      "description": "Category of the lab result"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded file (PDF or image)"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original filename"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "MIME type of the file"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes or summary"
+    }
+  },
+  "required": [
+    "title",
+    "date",
+    "category"
+  ]
+}

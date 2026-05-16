@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 
@@ -9,6 +9,7 @@ const navItems = [
   { path: '/trends', icon: TrendingUp, label: 'Trends' },
   { path: '/coach', icon: Sparkles, label: 'Health Coach' },
   { path: '/devices', icon: Plug, label: 'Connect Devices' },
+  { path: '/labs', icon: FlaskConical, label: 'Lab Results' },
 ];
 
 export default function AppLayout() {
