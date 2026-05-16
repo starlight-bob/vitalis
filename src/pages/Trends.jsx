@@ -29,7 +29,8 @@ export default function Trends() {
 
   const chartData = useMemo(() => {
     const cutoff = format(subDays(new Date(), days), 'yyyy-MM-dd');
-    const filtered = allLogs
+    const logs = Array.isArray(allLogs) ? allLogs : [];
+    const filtered = logs
       .filter(log => log.date >= cutoff)
       .sort((a, b) => a.date.localeCompare(b.date));
 
