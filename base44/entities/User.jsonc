@@ -1,0 +1,54 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The role of the user in the app",
+      "enum": [
+        "admin",
+        "user"
+      ]
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Profile picture URL"
+    },
+    "username": {
+      "type": "string",
+      "description": "Public username"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "Free",
+        "Pro",
+        "Elite"
+      ],
+      "default": "Free",
+      "description": "Subscription plan"
+    },
+    "units": {
+      "type": "string",
+      "enum": [
+        "Metric",
+        "Imperial"
+      ],
+      "default": "Metric"
+    },
+    "notifications_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "friends": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of friend user IDs"
+    }
+  },
+  "required": [
+    "role"
+  ]
+}

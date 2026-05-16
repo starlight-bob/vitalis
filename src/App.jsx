@@ -14,6 +14,7 @@ import HealthCoach from '@/pages/HealthCoach';
 import ConnectDevices from '@/pages/ConnectDevices';
 import LabResults from '@/pages/LabResults';
 import BiologicalAge from '@/pages/BiologicalAge';
+import Account from '@/pages/Account';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -45,6 +46,7 @@ const AuthenticatedApp = () => {
         <Route path="/devices" element={<ConnectDevices />} />
         <Route path="/labs" element={<LabResults />} />
         <Route path="/bio-age" element={<BiologicalAge />} />
+        <Route path="/account" element={<Account />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

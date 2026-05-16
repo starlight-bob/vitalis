@@ -3,6 +3,8 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import MobileProfileButton from '@/components/account/MobileProfileButton';
 
 const primaryNav = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -29,6 +31,11 @@ const allSidebarNav = [
 export default function AppLayout() {
   const location = useLocation();
   const [moreOpen, setMoreOpen] = useState(false);
+
+  const { data: me } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+  });
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -82,6 +89,8 @@ export default function AppLayout() {
           <Outlet />
         </div>
       </main>
+
+      <MobileProfileButton user={me} />
 
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-border z-30 safe-area-bottom">
