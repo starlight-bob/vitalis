@@ -11,14 +11,14 @@ const MOCK_BATTERY = 72;
 const MOCK_FIRMWARE = 'v4.12.1';
 
 const ADD_DEVICES = [
-  { id: 'apple_watch', name: 'Apple Watch', icon: '⌚', sub: 'Series 4 and later' },
-  { id: 'garmin', name: 'Garmin', icon: '🟡', sub: 'All models via Connect IQ' },
-  { id: 'fitbit', name: 'Fitbit', icon: '📟', sub: 'Charge, Sense, Versa' },
-  { id: 'oura', name: 'Oura Ring', icon: '💍', sub: 'Gen 2 & Gen 3' },
-  { id: 'whoop', name: 'WHOOP', icon: '💪', sub: 'WHOOP 4.0 & 5.0' },
-  { id: 'samsung', name: 'Galaxy Watch', icon: '🔵', sub: 'Galaxy Watch 4+' },
-  { id: 'manual', name: 'Manual Entry', icon: '✏️', sub: 'Log data manually' },
-];
+{ id: 'apple_watch', name: 'Apple Watch', icon: '⌚', sub: 'Series 4 and later' },
+{ id: 'garmin', name: 'Garmin', icon: '🟡', sub: 'All models via Connect IQ' },
+{ id: 'fitbit', name: 'Fitbit', icon: '📟', sub: 'Charge, Sense, Versa' },
+{ id: 'oura', name: 'Oura Ring', icon: '💍', sub: 'Gen 2 & Gen 3' },
+{ id: 'whoop', name: 'WHOOP', icon: '💪', sub: 'WHOOP 4.0 & 5.0' },
+{ id: 'samsung', name: 'Galaxy Watch', icon: '🔵', sub: 'Galaxy Watch 4+' },
+{ id: 'manual', name: 'Manual Entry', icon: '✏️', sub: 'Log data manually' }];
+
 
 function getBatteryColor(pct) {
   if (pct >= 75) return 'bg-emerald-500';
@@ -30,25 +30,25 @@ function Toggle({ enabled, onToggle }) {
   return (
     <button
       onClick={onToggle}
-      className={`relative h-5 w-9 rounded-full transition-colors ${enabled ? 'bg-emerald-500' : 'bg-zinc-700'}`}
-    >
+      className={`relative h-5 w-9 rounded-full transition-colors ${enabled ? 'bg-emerald-500' : 'bg-zinc-700'}`}>
+      
       <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-3.5' : 'translate-x-0.5'}`} />
-    </button>
-  );
+    </button>);
+
 }
 
 const MOCK_SYNC_LOG = [
-  { id: 1, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 5) },
-  { id: 2, status: 'success', device: 'Garmin Connect', time: new Date(Date.now() - 1000 * 60 * 62) },
-  { id: 3, status: 'failed', device: 'Oura Ring', time: new Date(Date.now() - 1000 * 60 * 120) },
-  { id: 4, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 5) },
-  { id: 5, status: 'success', device: 'WHOOP', time: new Date(Date.now() - 1000 * 60 * 60 * 8) },
-  { id: 6, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 11) },
-  { id: 7, status: 'failed', device: 'Garmin Connect', time: new Date(Date.now() - 1000 * 60 * 60 * 14) },
-  { id: 8, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 24) },
-  { id: 9, status: 'success', device: 'WHOOP', time: new Date(Date.now() - 1000 * 60 * 60 * 30) },
-  { id: 10, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 36) },
-];
+{ id: 1, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 5) },
+{ id: 2, status: 'success', device: 'Garmin Connect', time: new Date(Date.now() - 1000 * 60 * 62) },
+{ id: 3, status: 'failed', device: 'Oura Ring', time: new Date(Date.now() - 1000 * 60 * 120) },
+{ id: 4, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 5) },
+{ id: 5, status: 'success', device: 'WHOOP', time: new Date(Date.now() - 1000 * 60 * 60 * 8) },
+{ id: 6, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 11) },
+{ id: 7, status: 'failed', device: 'Garmin Connect', time: new Date(Date.now() - 1000 * 60 * 60 * 14) },
+{ id: 8, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 24) },
+{ id: 9, status: 'success', device: 'WHOOP', time: new Date(Date.now() - 1000 * 60 * 60 * 30) },
+{ id: 10, status: 'success', device: 'Apple Watch', time: new Date(Date.now() - 1000 * 60 * 60 * 36) }];
+
 
 export default function DeviceSettings() {
   const [syncing, setSyncing] = useState(false);
@@ -60,10 +60,10 @@ export default function DeviceSettings() {
 
   const { data: connections = [] } = useQuery({
     queryKey: ['deviceConnections'],
-    queryFn: () => base44.entities.DeviceConnection.list(),
+    queryFn: () => base44.entities.DeviceConnection.list()
   });
 
-  const connected = connections.filter(c => c.connected);
+  const connected = connections.filter((c) => c.connected);
   const primary = connected[0] || null;
 
   const removeMutation = useMutation({
@@ -71,12 +71,12 @@ export default function DeviceSettings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deviceConnections'] });
       toast.success('Device removed');
-    },
+    }
   });
 
   const handleSync = async () => {
     setSyncing(true);
-    await new Promise(r => setTimeout(r, 1800));
+    await new Promise((r) => setTimeout(r, 1800));
     if (primary) {
       await base44.entities.DeviceConnection.update(primary.id, { last_sync: new Date().toISOString() });
       queryClient.invalidateQueries({ queryKey: ['deviceConnections'] });
@@ -92,7 +92,7 @@ export default function DeviceSettings() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white pb-32">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[#0a0a0a]/95 backdrop-blur border-b border-white/5 px-4 py-4 flex items-center gap-3">
+      <div className="sticky top-0 z-10 backdrop-blur border-b border-white/5 px-4 py-4 flex items-center gap-3">
         <Link to="/" className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
           <ChevronLeft className="h-4 w-4 text-white" />
         </Link>
@@ -102,9 +102,9 @@ export default function DeviceSettings() {
       <div className="px-4 py-6 space-y-6">
 
         {/* Connected Device Card */}
-        {primary ? (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-[#141414] border border-white/8 rounded-2xl p-5 space-y-4">
+        {primary ?
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+        className="bg-[#141414] border border-white/8 rounded-2xl p-5 space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center">
@@ -119,10 +119,10 @@ export default function DeviceSettings() {
                 </div>
               </div>
               <button
-                onClick={handleSync}
-                disabled={syncing}
-                className="flex items-center gap-1.5 text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-lg hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
-              >
+              onClick={handleSync}
+              disabled={syncing}
+              className="flex items-center gap-1.5 text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-lg hover:bg-emerald-500/20 transition-colors disabled:opacity-50">
+              
                 <RefreshCw className={`h-3 w-3 ${syncing ? 'animate-spin' : ''}`} />
                 {syncing ? 'Syncing…' : 'Sync Now'}
               </button>
@@ -136,11 +136,11 @@ export default function DeviceSettings() {
               </div>
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
-                  className={`h-full rounded-full ${getBatteryColor(MOCK_BATTERY)}`}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${MOCK_BATTERY}%` }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                />
+                className={`h-full rounded-full ${getBatteryColor(MOCK_BATTERY)}`}
+                initial={{ width: 0 }}
+                animate={{ width: `${MOCK_BATTERY}%` }}
+                transition={{ duration: 0.8, ease: 'easeOut' }} />
+              
               </div>
             </div>
 
@@ -152,27 +152,27 @@ export default function DeviceSettings() {
               <div className="bg-white/4 rounded-xl p-3">
                 <p className="text-[10px] text-white/40 mb-0.5">Last Sync</p>
                 <p className="text-xs font-medium">
-                  {primary.last_sync
-                    ? formatDistanceToNow(new Date(primary.last_sync), { addSuffix: true })
-                    : 'Never'}
+                  {primary.last_sync ?
+                formatDistanceToNow(new Date(primary.last_sync), { addSuffix: true }) :
+                'Never'}
                 </p>
               </div>
             </div>
-          </motion.div>
-        ) : (
-          <div className="bg-[#141414] border border-white/8 rounded-2xl p-5 text-center">
+          </motion.div> :
+
+        <div className="bg-[#141414] border border-white/8 rounded-2xl p-5 text-center">
             <Watch className="h-8 w-8 text-white/20 mx-auto mb-2" />
             <p className="text-sm text-white/40">No device connected</p>
           </div>
-        )}
+        }
 
         {/* My Devices */}
-        {connections.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+        {connections.length > 0 &&
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
             <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-3">My Devices</p>
             <div className="bg-[#141414] border border-white/8 rounded-2xl overflow-hidden divide-y divide-white/5">
-              {connections.map((conn) => (
-                <div key={conn.id} className="flex items-center justify-between px-4 py-3.5">
+              {connections.map((conn) =>
+            <div key={conn.id} className="flex items-center justify-between px-4 py-3.5">
                   <div className="flex items-center gap-3">
                     <span className={`h-2 w-2 rounded-full ${conn.connected ? 'bg-emerald-400' : 'bg-white/20'}`} />
                     <div>
@@ -181,27 +181,27 @@ export default function DeviceSettings() {
                     </div>
                   </div>
                   <button
-                    onClick={() => removeMutation.mutate(conn)}
-                    className="h-7 w-7 rounded-lg bg-white/5 flex items-center justify-center hover:bg-red-500/20 hover:text-red-400 text-white/30 transition-colors"
-                  >
+                onClick={() => removeMutation.mutate(conn)}
+                className="h-7 w-7 rounded-lg bg-white/5 flex items-center justify-center hover:bg-red-500/20 hover:text-red-400 text-white/30 transition-colors">
+                
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 </div>
-              ))}
+            )}
             </div>
           </motion.div>
-        )}
+        }
 
         {/* Add New Device */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-3">Add New Device</p>
           <div className="bg-[#141414] border border-white/8 rounded-2xl overflow-hidden divide-y divide-white/5">
-            {ADD_DEVICES.map((d) => (
-              <button
-                key={d.id}
-                onClick={() => handleAdd(d)}
-                className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-white/4 transition-colors text-left"
-              >
+            {ADD_DEVICES.map((d) =>
+            <button
+              key={d.id}
+              onClick={() => handleAdd(d)}
+              className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-white/4 transition-colors text-left">
+              
                 <div className="flex items-center gap-3">
                   <span className="text-lg leading-none">{d.icon}</span>
                   <div>
@@ -211,7 +211,7 @@ export default function DeviceSettings() {
                 </div>
                 <Plus className="h-4 w-4 text-white/20" />
               </button>
-            ))}
+            )}
           </div>
         </motion.div>
 
@@ -220,18 +220,18 @@ export default function DeviceSettings() {
           <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-3">Sync Settings</p>
           <div className="bg-[#141414] border border-white/8 rounded-2xl overflow-hidden divide-y divide-white/5">
             {[
-              { label: 'Auto-Sync', sub: 'Automatically sync when in range', val: autoSync, set: setAutoSync },
-              { label: 'Background Sync', sub: 'Sync while app is in background', val: bgSync, set: setBgSync },
-              { label: 'Wi-Fi Only', sub: 'Only sync on Wi-Fi connections', val: wifiOnly, set: setWifiOnly },
-            ].map(({ label, sub, val, set }) => (
-              <div key={label} className="flex items-center justify-between px-4 py-3.5">
+            { label: 'Auto-Sync', sub: 'Automatically sync when in range', val: autoSync, set: setAutoSync },
+            { label: 'Background Sync', sub: 'Sync while app is in background', val: bgSync, set: setBgSync },
+            { label: 'Wi-Fi Only', sub: 'Only sync on Wi-Fi connections', val: wifiOnly, set: setWifiOnly }].
+            map(({ label, sub, val, set }) =>
+            <div key={label} className="flex items-center justify-between px-4 py-3.5">
                 <div>
                   <p className="text-sm font-medium">{label}</p>
                   <p className="text-[10px] text-white/30">{sub}</p>
                 </div>
-                <Toggle enabled={val} onToggle={() => set(v => !v)} />
+                <Toggle enabled={val} onToggle={() => set((v) => !v)} />
               </div>
-            ))}
+            )}
 
             {/* Sync Frequency */}
             <div className="flex items-center justify-between px-4 py-3.5">
@@ -241,9 +241,9 @@ export default function DeviceSettings() {
               </div>
               <select
                 value={syncFreq}
-                onChange={e => setSyncFreq(e.target.value)}
-                className="bg-white/8 border border-white/10 text-white text-xs rounded-lg px-2.5 py-1.5 outline-none"
-              >
+                onChange={(e) => setSyncFreq(e.target.value)}
+                className="bg-white/8 border border-white/10 text-white text-xs rounded-lg px-2.5 py-1.5 outline-none">
+                
                 <option value="5min">Every 5 min</option>
                 <option value="15min">Every 15 min</option>
                 <option value="30min">Every 30 min</option>
@@ -257,11 +257,11 @@ export default function DeviceSettings() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-3">Sync Log</p>
           <div className="bg-[#141414] border border-white/8 rounded-2xl overflow-hidden divide-y divide-white/5">
-            {MOCK_SYNC_LOG.map((entry) => (
-              <div key={entry.id} className="flex items-center gap-3 px-4 py-3">
-                {entry.status === 'success'
-                  ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
-                  : <XCircle className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />}
+            {MOCK_SYNC_LOG.map((entry) =>
+            <div key={entry.id} className="flex items-center gap-3 px-4 py-3">
+                {entry.status === 'success' ?
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" /> :
+              <XCircle className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{entry.device}</p>
                   <p className="text-[10px] text-white/30">{entry.status === 'success' ? 'Sync successful' : 'Sync failed'}</p>
@@ -271,11 +271,11 @@ export default function DeviceSettings() {
                   {formatDistanceToNow(entry.time, { addSuffix: true })}
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </motion.div>
 
       </div>
-    </div>
-  );
+    </div>);
+
 }
