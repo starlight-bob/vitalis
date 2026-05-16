@@ -137,7 +137,7 @@ export default function AppLayout() {
             <span className="text-[10px] font-medium">More</span>
           </button>
 
-          {/* Health Coach — icon only, bottom right */}
+          {/* Health Coach */}
           <button
             onClick={() => handleTabPress('/coach')}
             className={cn(
@@ -146,6 +146,7 @@ export default function AppLayout() {
             )}
           >
             <Sparkles className={cn("h-5 w-5", location.pathname === '/coach' && "drop-shadow-sm")} />
+            <span className="text-[10px] font-medium">Coach</span>
           </button>
         </div>
       </nav>
