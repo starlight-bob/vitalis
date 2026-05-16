@@ -11,6 +11,7 @@ import Dashboard from '@/pages/Dashboard';
 import LogEntry from '@/pages/LogEntry';
 import Trends from '@/pages/Trends';
 import HealthCoach from '@/pages/HealthCoach';
+import ConnectDevices from '@/pages/ConnectDevices';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -39,6 +40,7 @@ const AuthenticatedApp = () => {
         <Route path="/log" element={<LogEntry />} />
         <Route path="/trends" element={<Trends />} />
         <Route path="/coach" element={<HealthCoach />} />
+        <Route path="/devices" element={<ConnectDevices />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

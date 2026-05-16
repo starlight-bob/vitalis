@@ -1,0 +1,27 @@
+{
+  "name": "DeviceConnection",
+  "type": "object",
+  "properties": {
+    "device_id": {
+      "type": "string",
+      "description": "Unique identifier for the device/platform (e.g. 'apple_health', 'garmin')"
+    },
+    "device_name": {
+      "type": "string",
+      "description": "Display name of the device"
+    },
+    "connected": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the device is currently connected"
+    },
+    "last_sync": {
+      "type": "string",
+      "description": "ISO timestamp of the last successful sync"
+    }
+  },
+  "required": [
+    "device_id",
+    "device_name"
+  ]
+}
