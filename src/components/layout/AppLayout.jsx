@@ -155,7 +155,7 @@ export default function AppLayout() {
       {moreOpen && (
         <div className="md:hidden fixed inset-0 z-20" onClick={() => setMoreOpen(false)}>
           <div
-            className="absolute bottom-16 inset-x-0 bg-card border-t border-border px-4 py-4 space-y-1 shadow-xl"
+            className="absolute bottom-20 inset-x-0 bg-card border-t border-border px-4 py-4 space-y-1 shadow-xl"
             onClick={e => e.stopPropagation()}
           >
             {moreNav.map((item) => {
