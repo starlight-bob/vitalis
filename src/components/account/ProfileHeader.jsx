@@ -40,7 +40,7 @@ export default function ProfileHeader({ user, streak, onAvatarUpdate }) {
             <img src={user.avatar_url} alt="avatar" className="h-full w-full object-cover" />
           ) : (
             <div className="h-full w-full flex items-center justify-center text-3xl font-bold text-muted-foreground">
-              {(user?.full_name || user?.email || '?')[0].toUpperCase()}
+              {((user?.full_name || user?.email || '?')[0] || '?').toUpperCase()}
             </div>
           )}
         </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Watch, RefreshCw, Trash2, Plus, ChevronLeft, CheckCircle2, XCircle, Clock, ChevronDown } from 'lucide-react';
+import { Watch, RefreshCw, Trash2, Plus, ChevronLeft, CheckCircle2, XCircle, Clock, ChevronDown, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
@@ -73,11 +73,14 @@ export default function DeviceSettings() {
   const [removeTarget, setRemoveTarget] = useState(null);
   const queryClient = useQueryClient();
 
-  const { data: connections = [] } = useQuery({
+  const { data: rawConnections, isLoading: connectionsLoading, isError: connectionsError } = useQuery({
     queryKey: ['deviceConnections'],
     queryFn: () => base44.entities.DeviceConnection.list(),
+    retry: 2,
   });
 
+  // Always safe array regardless of what the API returns
+  const connections = Array.isArray(rawConnections) ? rawConnections : [];
   const connected = connections.filter(c => c.connected);
   const primary = connected[0] || null;
 
@@ -114,6 +117,24 @@ export default function DeviceSettings() {
   const handleAdd = (device) => {
     toast.info(`${device.name} — OAuth pairing coming soon`);
   };
+
+  if (connectionsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (connectionsError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-3 px-8">
+        <Watch className="h-10 w-10 text-muted-foreground" />
+        <p className="text-base font-semibold text-foreground">Couldn't load devices</p>
+        <p className="text-sm text-muted-foreground text-center">Please check your connection and try again.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32">

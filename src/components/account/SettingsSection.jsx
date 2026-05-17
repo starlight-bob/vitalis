@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronRight, Bell, Ruler, Plug, Shield, HelpCircle, LogOut, Zap, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -11,9 +11,15 @@ const PLAN_BADGE = {
 };
 
 export default function SettingsSection({ user, onUpdate }) {
-  const [units, setUnits] = useState(user?.units || 'Metric');
-  const [notifications, setNotifications] = useState(user?.notifications_enabled ?? true);
+  const [units, setUnits] = useState('Metric');
+  const [notifications, setNotifications] = useState(true);
   const queryClient = useQueryClient();
+
+  // Sync from user once it loads (handles real iOS where user arrives after mount)
+  useEffect(() => {
+    if (user?.units) setUnits(user.units);
+    if (user?.notifications_enabled != null) setNotifications(user.notifications_enabled);
+  }, [user?.units, user?.notifications_enabled]);
 
   const plan = user?.plan || 'Free';
 

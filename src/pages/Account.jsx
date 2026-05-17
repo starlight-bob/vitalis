@@ -13,30 +13,52 @@ import { motion } from 'framer-motion';
 export default function Account() {
   const [avatarUrl, setAvatarUrl] = useState(null);
 
-  const { data: me, isLoading } = useQuery({
+  const { data: me, isLoading: meLoading, isError: meError } = useQuery({
     queryKey: ['me'],
     queryFn: () => base44.auth.me(),
+    retry: 2,
   });
 
-  const { data: logs = [] } = useQuery({
+  const { data: rawLogs, isLoading: logsLoading } = useQuery({
     queryKey: ['healthLogs', 'all'],
     queryFn: () => base44.entities.HealthLog.list('-date', 120),
+    retry: 2,
   });
 
-  const { data: labResults = [] } = useQuery({
+  const { data: rawLabResults, isLoading: labsLoading } = useQuery({
     queryKey: ['labResults'],
     queryFn: () => base44.entities.LabResult.list('-date', 200),
+    retry: 2,
   });
 
-  const user = me ? { ...me, avatar_url: avatarUrl ?? me.avatar_url } : null;
+  // Always safe arrays regardless of what the API returns
+  const logs = Array.isArray(rawLogs) ? rawLogs : [];
+  const labResults = Array.isArray(rawLabResults) ? rawLabResults : [];
+
+  // Only treat me as valid if it has an id (not an empty object {})
+  const meData = me && me.id ? me : null;
+  const user = meData ? { ...meData, avatar_url: avatarUrl ?? meData.avatar_url } : null;
+
   const streak = calculateStreak(logs);
   const bioData = calculateBioAge(logs, 35);
   const badges = evaluateBadges(logs, labResults, bioData);
+
+  const isLoading = meLoading || logsLoading || labsLoading;
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-32">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (meError || !user) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 gap-3">
+        <span className="text-4xl">👤</span>
+        <p className="text-base font-semibold text-foreground">Couldn't load profile</p>
+        <p className="text-sm text-muted-foreground text-center max-w-xs">Please check your connection and try again.</p>
       </div>
     );
   }
