@@ -21,7 +21,7 @@ export default function ChatMessage({ message, index }) {
       <div className={cn('max-w-[80%]', isUser ? 'items-end flex flex-col' : '')}>
         <div
           className={cn(
-            'rounded-2xl px-3 py-2.5 text-sm leading-relaxed',
+            'rounded-2xl px-3 py-2 text-sm leading-snug',
             isUser
               ? 'bg-primary text-primary-foreground rounded-tr-sm'
               : 'bg-card border border-white/10 text-foreground rounded-tl-sm shadow-sm'
