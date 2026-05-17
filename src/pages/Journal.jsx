@@ -110,7 +110,7 @@ export default function Journal() {
   return (
     <div className="max-w-2xl mx-auto space-y-5 pb-8">
       {/* Header */}
-      <div className="flex items-start justify-between pt-1">
+      <div className="flex items-start justify-between pt-12 md:pt-1">
         <div>
           <h1 className="text-2xl font-black text-foreground tracking-tight">My Experiments</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Daily habits · Lifestyle correlations</p>
