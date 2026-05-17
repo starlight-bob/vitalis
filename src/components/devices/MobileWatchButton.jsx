@@ -16,7 +16,7 @@ export default function MobileWatchButton() {
   return (
     <Link
       to="/device-settings"
-      className="md:hidden fixed top-4 right-4 z-40 flex flex-col items-center gap-0.5"
+      className="md:hidden fixed top-14 right-4 z-40 flex flex-col items-center gap-0.5"
     >
       <div className="h-9 w-9 rounded-full bg-card border border-border shadow-md flex items-center justify-center">
         <Watch className="h-4 w-4 text-foreground" />
