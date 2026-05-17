@@ -11,7 +11,7 @@ const PROMPTS = [
 
 export default function SuggestedPrompts({ onSelect, disabled }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-1.5">
       {PROMPTS.map((p, i) => (
         <motion.button
           key={p.label}
@@ -20,7 +20,7 @@ export default function SuggestedPrompts({ onSelect, disabled }) {
           transition={{ delay: i * 0.06 }}
           onClick={() => onSelect(p.label)}
           disabled={disabled}
-          className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-full border border-white/10 bg-card hover:bg-sidebar-accent hover:border-emerald-500/40 text-muted-foreground hover:text-foreground transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border border-white/10 bg-card hover:bg-sidebar-accent hover:border-emerald-500/40 text-muted-foreground hover:text-foreground transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <span>{p.emoji}</span>
           <span>{p.label}</span>

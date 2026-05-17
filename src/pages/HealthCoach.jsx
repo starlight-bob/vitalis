@@ -138,7 +138,7 @@ Coach:`;
         </div>
 
         {/* Input Area */}
-        <div className="pb-4 pt-2 space-y-2 border-t border-white/10">
+        <div className="pb-2 pt-1.5 space-y-1.5 border-t border-white/10">
           {showSuggestions && (
             <SuggestedPrompts onSelect={sendMessage} disabled={isLoading} />
           )}
