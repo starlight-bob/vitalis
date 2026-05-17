@@ -129,7 +129,7 @@ Coach:`;
         <CoachHeader logsCount={logs.length} labCount={labResults.length} />
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto py-6 space-y-5 scrollbar-thin">
+        <div className="flex-1 overflow-y-auto py-3 space-y-3 scrollbar-thin">
           {messages.map((msg, i) => (
             <ChatMessage key={i} message={msg} index={i} />
           ))}
@@ -138,7 +138,7 @@ Coach:`;
         </div>
 
         {/* Input Area */}
-        <div className="pb-6 pt-2 space-y-3 border-t border-white/10">
+        <div className="pb-4 pt-2 space-y-2 border-t border-white/10">
           {showSuggestions && (
             <SuggestedPrompts onSelect={sendMessage} disabled={isLoading} />
           )}
