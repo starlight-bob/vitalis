@@ -21,7 +21,7 @@ export default function ChatMessage({ message, index }) {
       <div className={cn('max-w-[80%]', isUser ? 'items-end flex flex-col' : '')}>
         <div
           className={cn(
-            'rounded-2xl px-4 py-3 text-sm leading-relaxed',
+            'rounded-2xl px-3 py-2.5 text-sm leading-relaxed',
             isUser
               ? 'bg-primary text-primary-foreground rounded-tr-sm'
               : 'bg-card border border-white/10 text-foreground rounded-tl-sm shadow-sm'
@@ -37,7 +37,7 @@ export default function ChatMessage({ message, index }) {
             </ReactMarkdown>
           )}
         </div>
-        <p className="text-[10px] text-muted-foreground mt-1.5 px-1">
+        <p className="text-[10px] text-muted-foreground mt-0.5 px-1">
           {message.timestamp}
         </p>
       </div>

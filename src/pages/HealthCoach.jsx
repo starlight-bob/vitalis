@@ -123,13 +123,13 @@ Coach:`;
   const showSuggestions = messages.length <= 1 && !isLoading;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-3rem)] md:h-[calc(100vh-3rem)] max-h-[900px] mt-8 md:-mt-6 -mx-4 sm:-mx-6 lg:-mx-8 bg-background">
+    <div className="flex flex-col h-[calc(100vh-5rem)] md:h-[calc(100vh-3rem)] max-h-[900px] mt-8 md:-mt-6 -mx-4 sm:-mx-6 lg:-mx-8 bg-background">
       {/* Inner container */}
       <div className="flex flex-col flex-1 overflow-hidden max-w-3xl mx-auto w-full px-4 sm:px-6 pt-6">
         <CoachHeader logsCount={logs.length} labCount={labResults.length} />
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto py-3 space-y-3 scrollbar-thin">
+        <div className="flex-1 overflow-y-auto py-2 space-y-2 scrollbar-thin">
           {messages.map((msg, i) => (
             <ChatMessage key={i} message={msg} index={i} />
           ))}
