@@ -6,9 +6,10 @@ import { calculateRecoveryScore } from './healthUtils';
  * @param {number} chronoAge - user's chronological age (default 35 for estimation)
  */
 export function calculateBioAge(logs, chronoAge = 35) {
-  if (!logs || logs.length === 0) return null;
+  const safeLogs = Array.isArray(logs) ? logs : [];
+  if (safeLogs.length === 0) return null;
 
-  const sorted = [...logs].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = [...safeLogs].sort((a, b) => b.date.localeCompare(a.date));
   const recent = sorted.slice(0, 30);
   const avg = (arr, key) => {
     const vals = arr.map(l => l[key]).filter(v => v != null && !isNaN(v));
@@ -100,9 +101,10 @@ export function calculateBioAge(logs, chronoAge = 35) {
  * Build monthly bio age trend for the past 6 months
  */
 export function buildBioAgeTrend(logs, chronoAge = 35) {
-  if (!logs || logs.length === 0) return [];
+  const safeLogs = Array.isArray(logs) ? logs : [];
+  if (safeLogs.length === 0) return [];
 
-  const sorted = [...logs].sort((a, b) => a.date.localeCompare(b.date));
+  const sorted = [...safeLogs].sort((a, b) => a.date.localeCompare(b.date));
   const now = new Date();
   const months = [];
 
@@ -112,7 +114,7 @@ export function buildBioAgeTrend(logs, chronoAge = 35) {
     const month = d.getMonth();
     const label = d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
 
-    const monthLogs = sorted.filter(l => {
+    const monthLogs = (Array.isArray(sorted) ? sorted : []).filter(l => {
       const ld = new Date(l.date + 'T00:00:00');
       return ld.getFullYear() === year && ld.getMonth() === month;
     });

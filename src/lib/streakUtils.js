@@ -34,10 +34,12 @@ export function calculateStreak(logs) {
  * Evaluate which badges are earned
  */
 export function evaluateBadges(logs, labResults, bioData) {
-  const streak = calculateStreak(logs);
+  const safeLogs = Array.isArray(logs) ? logs : [];
+  const safeLabResults = Array.isArray(labResults) ? labResults : [];
+  const streak = calculateStreak(safeLogs);
 
-  const sleepMasterDays = logs.filter(l => l.sleep_duration >= 8).length;
-  const recoveryKingDays = logs.filter(l => {
+  const sleepMasterDays = safeLogs.filter(l => l.sleep_duration >= 8).length;
+  const recoveryKingDays = safeLogs.filter(l => {
     // approximate 90%+ recovery: high HRV + good sleep
     return l.hrv >= 90 && l.sleep_quality >= 8;
   }).length;
@@ -47,9 +49,9 @@ export function evaluateBadges(logs, labResults, bioData) {
       id: 'first_log',
       label: 'First Log',
       emoji: '🏅',
-      earned: logs.length >= 1,
+      earned: safeLogs.length >= 1,
       desc: 'Log your first day',
-      progress: Math.min(1, logs.length),
+      progress: Math.min(1, safeLogs.length),
       total: 1,
     },
     {
@@ -92,9 +94,9 @@ export function evaluateBadges(logs, labResults, bioData) {
       id: 'lab_vault',
       label: 'Lab Vault',
       emoji: '🧪',
-      earned: (labResults?.length || 0) >= 1,
+      earned: safeLabResults.length >= 1,
       desc: 'Upload your first lab result',
-      progress: Math.min(1, labResults?.length || 0),
+      progress: Math.min(1, safeLabResults.length),
       total: 1,
     },
     {

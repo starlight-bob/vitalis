@@ -2,11 +2,12 @@ import { motion } from 'framer-motion';
 import { Lock } from 'lucide-react';
 
 export default function BadgesSection({ badges }) {
+  const safeBadges = Array.isArray(badges) ? badges : [];
   return (
     <div className="px-4">
       <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Achievements</h3>
       <div className="grid grid-cols-2 gap-3">
-        {badges.map((badge, i) => (
+        {safeBadges.map((badge, i) => (
           <motion.div
             key={badge.id}
             initial={{ opacity: 0, scale: 0.85 }}
