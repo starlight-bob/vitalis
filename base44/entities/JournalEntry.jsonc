@@ -1,0 +1,62 @@
+{
+  "name": "JournalEntry",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the journal entry (YYYY-MM-DD)"
+    },
+    "sunlight_minutes": {
+      "type": "number",
+      "description": "Minutes of outdoor sunlight exposure"
+    },
+    "water_ml": {
+      "type": "number",
+      "description": "Water intake in ml"
+    },
+    "alcohol_units": {
+      "type": "number",
+      "description": "Alcohol units consumed (0 = none)"
+    },
+    "stress_level": {
+      "type": "number",
+      "description": "Subjective stress level 1-10"
+    },
+    "exercise_minutes": {
+      "type": "number",
+      "description": "Minutes of intentional exercise"
+    },
+    "screen_time_before_bed": {
+      "type": "number",
+      "description": "Minutes of screen time in the hour before bed"
+    },
+    "caffeine_mg": {
+      "type": "number",
+      "description": "Caffeine intake in mg"
+    },
+    "last_caffeine_hour": {
+      "type": "number",
+      "description": "Hour of day (0-23) of last caffeine consumption"
+    },
+    "meditation_minutes": {
+      "type": "number",
+      "description": "Minutes of meditation or breathing exercises"
+    },
+    "cold_exposure": {
+      "type": "boolean",
+      "description": "Cold shower or ice bath"
+    },
+    "mood": {
+      "type": "number",
+      "description": "Overall mood score 1-10"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-form notes"
+    }
+  },
+  "required": [
+    "date"
+  ]
+}

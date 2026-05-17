@@ -1,0 +1,23 @@
+{
+  "name": "JournalSettings",
+  "type": "object",
+  "properties": {
+    "enabled_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of question keys the user has enabled",
+      "default": [
+        "sunlight_minutes",
+        "water_ml",
+        "alcohol_units",
+        "stress_level",
+        "screen_time_before_bed",
+        "caffeine_mg",
+        "mood"
+      ]
+    }
+  },
+  "required": []
+}

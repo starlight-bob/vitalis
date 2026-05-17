@@ -6,6 +6,7 @@ import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { buildFullContext } from '@/lib/buildHealthContext';
+import { computeCorrelations } from '@/lib/correlationEngine';
 import ChatMessage from '@/components/coach/ChatMessage';
 import TypingIndicator from '@/components/coach/TypingIndicator';
 import SuggestedPrompts from '@/components/coach/SuggestedPrompts';
@@ -67,6 +68,11 @@ export default function HealthCoach() {
     queryFn: () => base44.entities.LabResult.list('-date', 200),
   });
 
+  const { data: rawJournalEntries } = useQuery({
+    queryKey: ['journalEntries'],
+    queryFn: () => base44.entities.JournalEntry.list('-date', 120),
+  });
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
@@ -85,7 +91,9 @@ export default function HealthCoach() {
     setInput('');
     setIsLoading(true);
 
-    const healthContext = buildFullContext(logs, labResults);
+    const journalEntries = Array.isArray(rawJournalEntries) ? rawJournalEntries : [];
+    const correlations = computeCorrelations(journalEntries, logs);
+    const healthContext = buildFullContext(logs, labResults, correlations);
 
     const fullPrompt = `${SYSTEM_PROMPT}
 

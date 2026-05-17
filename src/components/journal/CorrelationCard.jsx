@@ -1,0 +1,101 @@
+import { motion } from 'framer-motion';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, Tooltip } from 'recharts';
+import { cn } from '@/lib/utils';
+
+const STRENGTH_STYLES = {
+  strong:   { bg: 'bg-emerald-500/10 border-emerald-500/30', badge: 'bg-emerald-500/20 text-emerald-600', text: 'Strong' },
+  moderate: { bg: 'bg-blue-500/10 border-blue-500/30',     badge: 'bg-blue-500/20 text-blue-600',     text: 'Moderate' },
+  weak:     { bg: 'bg-muted border-border',                  badge: 'bg-muted text-muted-foreground',   text: 'Weak' },
+};
+
+export default function CorrelationCard({ correlation, index }) {
+  const { journalEmoji, journalLabel, healthEmoji, healthLabel, r, strength, positive, pctDiff, dataPoints, series } = correlation;
+  const styles = STRENGTH_STYLES[strength];
+
+  const Icon = positive ? TrendingUp : r === 0 ? Minus : TrendingDown;
+  const iconColor = positive ? 'text-emerald-500' : 'text-red-500';
+
+  const insightText = (() => {
+    if (pctDiff != null && Math.abs(pctDiff) >= 5) {
+      const dir = pctDiff > 0 ? 'higher' : 'lower';
+      const absP = Math.abs(pctDiff);
+      return `On days with more ${journalLabel.toLowerCase()}, your ${healthLabel} was ${absP}% ${dir}.`;
+    }
+    return `${journalLabel} ${positive ? 'positively' : 'negatively'} correlates with your ${healthLabel}.`;
+  })();
+
+  const scatterData = series.map(s => ({ x: s.jVal, y: s.hVal }));
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.04 }}
+      className={cn('bg-card border rounded-2xl p-4 space-y-3', styles.bg)}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <span className="text-2xl flex-shrink-0">{journalEmoji}</span>
+          <div className="min-w-0">
+            <p className="text-sm font-bold text-foreground leading-tight">
+              {journalLabel} → {healthEmoji} {healthLabel}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{insightText}</p>
+          </div>
+        </div>
+        <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+          <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', styles.badge)}>
+            {styles.text}
+          </span>
+          <div className="flex items-center gap-1">
+            <Icon className={cn('h-3.5 w-3.5', iconColor)} />
+            <span className="text-xs font-mono font-bold text-foreground">r={r}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Scatter plot */}
+      {scatterData.length >= 5 && (
+        <div className="h-28">
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart margin={{ top: 4, right: 4, bottom: 4, left: 4 }}>
+              <XAxis
+                dataKey="x"
+                type="number"
+                name={journalLabel}
+                tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis
+                dataKey="y"
+                type="number"
+                name={healthLabel}
+                tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }}
+                axisLine={false}
+                tickLine={false}
+                width={28}
+              />
+              <Tooltip
+                cursor={{ strokeDasharray: '3 3' }}
+                contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }}
+                formatter={(val, name) => [val, name === 'x' ? journalLabel : healthLabel]}
+              />
+              <Scatter
+                data={scatterData}
+                fill="hsl(var(--primary))"
+                fillOpacity={0.7}
+                r={3}
+              />
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* Footer */}
+      <p className="text-[10px] text-muted-foreground">Based on {dataPoints} days of data</p>
+    </motion.div>
+  );
+}

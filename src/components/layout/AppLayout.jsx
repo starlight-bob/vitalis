@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X, BookOpen } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +15,7 @@ const primaryNav = [
 
 const moreNav = [
   { path: '/log', icon: PlusCircle, label: 'Log Entry' },
+  { path: '/journal', icon: BookOpen, label: 'Daily Journal' },
   { path: '/devices', icon: Plug, label: 'Connect Devices' },
   { path: '/labs', icon: FlaskConical, label: 'Lab Results' },
 ];
@@ -23,6 +24,7 @@ const allSidebarNav = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/log', icon: PlusCircle, label: 'Log Entry' },
   { path: '/trends', icon: TrendingUp, label: 'Trends' },
+  { path: '/journal', icon: BookOpen, label: 'Daily Journal' },
   { path: '/coach', icon: Sparkles, label: 'Health Coach' },
   { path: '/devices', icon: Plug, label: 'Connect Devices' },
   { path: '/labs', icon: FlaskConical, label: 'Lab Results' },

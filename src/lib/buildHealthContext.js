@@ -1,4 +1,5 @@
 import { calculateRecoveryScore } from './healthUtils';
+import { buildCorrelationContext } from './correlationEngine';
 
 /**
  * Builds a rich text summary of the user's health data to inject into the LLM prompt
@@ -118,8 +119,12 @@ DATA COVERAGE: ${logs.length} total logged days
 `.trim();
 }
 
-export function buildFullContext(logs, labResults) {
+export function buildFullContext(logs, labResults, correlations) {
   const healthCtx = buildHealthContext(logs);
   const labCtx = buildLabContext(labResults);
-  return labCtx ? `${healthCtx}\n\n${labCtx}` : healthCtx;
+  const corrCtx = buildCorrelationContext(correlations);
+  let ctx = healthCtx;
+  if (labCtx) ctx += `\n\n${labCtx}`;
+  if (corrCtx) ctx += `\n\n${corrCtx}`;
+  return ctx;
 }
