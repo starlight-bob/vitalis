@@ -3,6 +3,11 @@ import { ChevronRight, Bell, Ruler, Plug, Shield, HelpCircle, LogOut, Zap, Trash
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient } from '@tanstack/react-query';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const PLAN_BADGE = {
   Free: { label: 'Free', cls: 'text-muted-foreground' },
@@ -13,6 +18,8 @@ const PLAN_BADGE = {
 export default function SettingsSection({ user, onUpdate }) {
   const [units, setUnits] = useState('Metric');
   const [notifications, setNotifications] = useState(true);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
   // Sync from user once it loads (handles real iOS where user arrives after mount)
@@ -28,6 +35,12 @@ export default function SettingsSection({ user, onUpdate }) {
     setUnits(next);
     await base44.auth.updateMe({ units: next });
     queryClient.invalidateQueries({ queryKey: ['me'] });
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    await base44.functions.invoke('deleteAccount', {});
+    base44.auth.logout();
   };
 
   const toggleNotif = async () => {
@@ -112,20 +125,36 @@ export default function SettingsSection({ user, onUpdate }) {
 
       {/* Danger zone */}
       <div>
-        
         <div className="bg-card border border-destructive/30 rounded-2xl overflow-hidden">
           <Row
             icon={Trash2}
             label="Delete Account"
             danger
-            onClick={() => {
-              if (window.confirm('Are you sure you want to permanently delete your account? This cannot be undone.')) {
-                base44.auth.logout();
-              }
-            }} />
-          
+            onClick={() => setShowDeleteDialog(true)}
+          />
         </div>
       </div>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete your account and all associated data — including health logs, lab results, journal entries, and device connections. <strong>This action cannot be undone.</strong>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleDeleteAccount}
+            >
+              {isDeleting ? 'Deleting…' : 'Delete My Account'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>);
 
 }

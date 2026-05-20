@@ -14,10 +14,20 @@ export default function LabDetailModal({ result, onClose, onEdit }) {
 
   const deleteMutation = useMutation({
     mutationFn: () => base44.entities.LabResult.delete(result.id),
+    onMutate: async () => {
+      await qc.cancelQueries({ queryKey: ['labResults'] });
+      const prev = qc.getQueryData(['labResults']);
+      qc.setQueryData(['labResults'], (old = []) => old.filter(r => r.id !== result.id));
+      onClose();
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prev) qc.setQueryData(['labResults'], ctx.prev);
+      toast.error('Failed to delete record');
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['labResults'] });
       toast.success('Record deleted');
-      onClose();
     },
   });
 
