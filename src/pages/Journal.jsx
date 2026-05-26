@@ -109,7 +109,7 @@ export default function Journal() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5 pb-8">
+    <div className="max-w-2xl mx-auto space-y-5 pb-8 overflow-hidden w-full">
       {/* Header */}
       <div className="flex items-start justify-between pt-12 md:pt-1">
         <div>
@@ -196,9 +196,9 @@ export default function Journal() {
           ) : (
             <>
               <CorrelationFilters active={filterMetric} onChange={setFilterMetric} />
-              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 border border-border rounded-xl px-3 py-2">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 border border-border rounded-xl px-3 py-2 w-full overflow-hidden">
                 <Info className="h-3.5 w-3.5 flex-shrink-0" />
-                <span>Ranked by correlation strength. Based on {entries.length} days of check-ins.</span>
+                <span className="truncate">Ranked by correlation strength. Based on {entries.length} days of check-ins.</span>
               </div>
               <div className="space-y-3">
                 {filteredCorrelations.map((c, i) => (
