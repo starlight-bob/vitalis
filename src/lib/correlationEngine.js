@@ -44,7 +44,7 @@ export const HEALTH_METRICS = [
  */
 function pearsonCorrelation(xs, ys) {
   const n = xs.length;
-  if (n < 3) return null;
+  if (n < 2) return null;
   const meanX = xs.reduce((s, v) => s + v, 0) / n;
   const meanY = ys.reduce((s, v) => s + v, 0) / n;
   const num = xs.reduce((s, v, i) => s + (v - meanX) * (ys[i] - meanY), 0);
@@ -60,7 +60,7 @@ function pearsonCorrelation(xs, ys) {
  */
 export function computeCorrelations(journalEntries, healthLogs) {
   if (!Array.isArray(journalEntries) || !Array.isArray(healthLogs)) return [];
-  if (journalEntries.length < 7) return [];
+  if (journalEntries.length < 3) return [];
 
   // Index health logs by date
   const logsByDate = {};
@@ -93,12 +93,12 @@ export function computeCorrelations(journalEntries, healthLogs) {
         }
       }
 
-      if (pairs.length < 7) continue;
+      if (pairs.length < 3) continue;
 
       const xs = pairs.map(p => p[0]);
       const ys = pairs.map(p => p[1]);
       const r = pearsonCorrelation(xs, ys);
-      if (r === null || Math.abs(r) < 0.15) continue;
+      if (r === null || Math.abs(r) < 0.1) continue;
 
       // Calculate "high vs low" insight
       const median = [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];

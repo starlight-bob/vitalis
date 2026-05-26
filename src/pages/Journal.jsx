@@ -98,7 +98,7 @@ export default function Journal() {
     return allCorrelations.filter(c => c.healthKey === filterMetric);
   }, [allCorrelations, filterMetric]);
 
-  const hasEnoughData = entries.length >= 7;
+  const hasEnoughData = entries.length >= 3;
 
   if (entriesLoading) {
     return (
@@ -171,7 +171,7 @@ export default function Journal() {
               <div>
                 <p className="text-base font-bold text-foreground">Not enough data yet</p>
                 <p className="text-sm text-muted-foreground max-w-xs mt-1">
-                  Complete at least <strong>7 daily check-ins</strong> to unlock lifestyle correlations.
+                  Complete at least <strong>3 daily check-ins</strong> to unlock lifestyle correlations.
                   You have {entries.length} so far.
                 </p>
               </div>
@@ -179,10 +179,10 @@ export default function Journal() {
               <div className="w-48 h-2 bg-muted rounded-full overflow-hidden">
                 <div
                   className="h-full bg-primary rounded-full transition-all"
-                  style={{ width: `${Math.min(100, (entries.length / 7) * 100)}%` }}
+                  style={{ width: `${Math.min(100, (entries.length / 3) * 100)}%` }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground">{entries.length}/7 check-ins complete</p>
+              <p className="text-xs text-muted-foreground">{entries.length}/3 check-ins complete</p>
               <Button onClick={() => setShowCheckin(true)} className="gap-2">
                 <PlusCircle className="h-4 w-4" /> Start Today's Check-in
               </Button>
