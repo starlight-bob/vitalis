@@ -109,7 +109,7 @@ export default function Journal() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5 pb-8 overflow-hidden w-full">
+    <div className="space-y-5 pb-8 w-full" style={{ maxWidth: '100%', overflowX: 'hidden' }}>
       {/* Header */}
       <div className="flex items-start justify-between pt-12 md:pt-1">
         <div>
@@ -146,7 +146,7 @@ export default function Journal() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-muted p-1 rounded-xl">
+      <div className="flex gap-1 bg-muted p-1 rounded-xl w-full">
         {TABS.map(t => (
           <button
             key={t.key}

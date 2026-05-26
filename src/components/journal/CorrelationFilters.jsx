@@ -6,7 +6,7 @@ const FILTERS = [ALL, ...HEALTH_METRICS];
 
 export default function CorrelationFilters({ active, onChange }) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none w-full -mx-0">
+    <div className="flex gap-2 overflow-x-auto pb-1 w-full" style={{ scrollbarWidth: 'none' }}>
       {FILTERS.map(f => (
         <button
           key={f.key}

@@ -98,8 +98,8 @@ export default function AppLayout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 min-h-screen">
-        <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6 pt-20 md:pt-6 overflow-hidden">
+      <main className="flex-1 md:ml-64 min-h-screen overflow-x-hidden w-full min-w-0">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6 pt-20 md:pt-6" style={{ overflowX: 'hidden' }}>
           <Outlet />
         </div>
       </main>
