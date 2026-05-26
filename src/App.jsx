@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AppLayout from '@/components/layout/AppLayout';
 import ThemeProvider from '@/lib/ThemeProvider';
+import { LanguageProvider } from '@/lib/LanguageContext';
 import { Loader2 } from 'lucide-react';
 
 const Dashboard      = lazy(() => import('@/pages/Dashboard'));
@@ -94,6 +95,7 @@ const AuthenticatedApp = () => {
 function App() {
   return (
     <ThemeProvider>
+      <LanguageProvider>
       <AuthProvider>
         <QueryClientProvider client={queryClientInstance}>
           <Router>
@@ -102,6 +104,7 @@ function App() {
           <Toaster />
         </QueryClientProvider>
       </AuthProvider>
+      </LanguageProvider>
     </ThemeProvider>
   )
 }

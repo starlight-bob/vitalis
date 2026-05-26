@@ -6,35 +6,37 @@ import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import MobileProfileButton from '@/components/account/MobileProfileButton';
 import MobileWatchButton from '@/components/devices/MobileWatchButton';
+import { useLanguage } from '@/lib/LanguageContext';
 
-const primaryNav = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/trends', icon: TrendingUp, label: 'Trends' },
-  { path: '/bio-age', icon: Dna, label: 'Bio Age' },
+const PRIMARY_NAV_KEYS = [
+  { path: '/', icon: LayoutDashboard, labelKey: 'dashboard' },
+  { path: '/trends', icon: TrendingUp, labelKey: 'trends' },
+  { path: '/bio-age', icon: Dna, labelKey: 'bioAge' },
 ];
 
-const moreNav = [
-  { path: '/log', icon: PlusCircle, label: 'Log Entry' },
-  { path: '/journal', icon: BookOpen, label: 'Daily Journal' },
-  { path: '/devices', icon: Plug, label: 'Connect Devices' },
-  { path: '/labs', icon: FlaskConical, label: 'Lab Results' },
+const MORE_NAV_KEYS = [
+  { path: '/log', icon: PlusCircle, labelKey: 'logEntry' },
+  { path: '/journal', icon: BookOpen, labelKey: 'journal' },
+  { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
+  { path: '/labs', icon: FlaskConical, labelKey: 'labResults' },
 ];
 
-const allSidebarNav = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/log', icon: PlusCircle, label: 'Log Entry' },
-  { path: '/trends', icon: TrendingUp, label: 'Trends' },
-  { path: '/journal', icon: BookOpen, label: 'Daily Journal' },
-  { path: '/coach', icon: Sparkles, label: 'Health Coach' },
-  { path: '/devices', icon: Plug, label: 'Connect Devices' },
-  { path: '/labs', icon: FlaskConical, label: 'Lab Results' },
-  { path: '/bio-age', icon: Dna, label: 'Biological Age' },
+const ALL_SIDEBAR_NAV_KEYS = [
+  { path: '/', icon: LayoutDashboard, labelKey: 'dashboard' },
+  { path: '/log', icon: PlusCircle, labelKey: 'logEntry' },
+  { path: '/trends', icon: TrendingUp, labelKey: 'trends' },
+  { path: '/journal', icon: BookOpen, labelKey: 'journal' },
+  { path: '/coach', icon: Sparkles, labelKey: 'healthCoach' },
+  { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
+  { path: '/labs', icon: FlaskConical, labelKey: 'labResults' },
+  { path: '/bio-age', icon: Dna, labelKey: 'biologicalAge' },
 ];
 
 export default function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [moreOpen, setMoreOpen] = useState(false);
+  const { t } = useLanguage();
 
   const handleTabPress = (path) => {
     if (location.pathname === path) {
@@ -64,7 +66,7 @@ export default function AppLayout() {
         </div>
 
         <nav className="flex-1 px-3 mt-4 space-y-1">
-          {allSidebarNav.map((item) => {
+          {ALL_SIDEBAR_NAV_KEYS.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
@@ -78,7 +80,7 @@ export default function AppLayout() {
                 )}
               >
                 <item.icon className="h-5 w-5" />
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             );
           })}
@@ -90,7 +92,7 @@ export default function AppLayout() {
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent w-full transition-all duration-200"
           >
             <LogOut className="h-5 w-5" />
-            Sign Out
+            {t('signOut')}
           </button>
         </div>
       </aside>
@@ -110,7 +112,7 @@ export default function AppLayout() {
       <nav className="md:hidden fixed bottom-0 inset-x-0 bg-card border-t border-border z-30 safe-bottom">
         <div className="flex items-center justify-around py-2">
           {/* Primary nav items */}
-          {primaryNav.map((item) => {
+          {PRIMARY_NAV_KEYS.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <button
@@ -122,7 +124,7 @@ export default function AppLayout() {
                 )}
               >
                 <item.icon className={cn("h-5 w-5", isActive && "drop-shadow-sm")} />
-                <span className="text-[10px] font-medium">{item.label}</span>
+                <span className="text-[10px] font-medium">{t(item.labelKey)}</span>
               </button>
             );
           })}
@@ -136,7 +138,7 @@ export default function AppLayout() {
             )}
           >
             {moreOpen ? <X className="h-5 w-5" /> : <MoreHorizontal className="h-5 w-5" />}
-            <span className="text-[10px] font-medium">More</span>
+            <span className="text-[10px] font-medium">{t('more')}</span>
           </button>
 
           {/* Health Coach */}
@@ -148,7 +150,7 @@ export default function AppLayout() {
             )}
           >
             <Sparkles className={cn("h-5 w-5", location.pathname === '/coach' && "drop-shadow-sm")} />
-            <span className="text-[10px] font-medium">Coach</span>
+            <span className="text-[10px] font-medium">{t('coach')}</span>
           </button>
         </div>
       </nav>
@@ -160,7 +162,7 @@ export default function AppLayout() {
             className="absolute bottom-20 inset-x-0 bg-card border-t border-border px-4 py-4 space-y-1 shadow-xl"
             onClick={e => e.stopPropagation()}
           >
-            {moreNav.map((item) => {
+            {MORE_NAV_KEYS.map((item) => {
               const isActive = location.pathname === item.path;
               return (
                 <Link
@@ -173,7 +175,7 @@ export default function AppLayout() {
                   )}
                 >
                   <item.icon className="h-5 w-5" />
-                  {item.label}
+                  {t(item.labelKey)}
                 </Link>
               );
             })}

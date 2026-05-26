@@ -12,9 +12,11 @@ import { Link } from 'react-router-dom';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PullToRefresh from '@/components/layout/PullToRefresh';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Dashboard() {
   const today = format(new Date(), 'yyyy-MM-dd');
+  const { t } = useLanguage();
 
   const { data: rawLogs, isLoading } = useQuery({
     queryKey: ['healthLogs', 'today'],
@@ -44,14 +46,14 @@ export default function Dashboard() {
         className="flex items-center justify-between pt-8 md:pt-0"
       >
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Today's Vitals</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('todaysVitals')}</h1>
           <p className="text-muted-foreground mt-1">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
         </div>
         {!todayLog && (
           <Link to="/log">
             <Button className="gap-2">
               <PlusCircle className="h-4 w-4" />
-              Log Today
+              {t('logToday')}
             </Button>
           </Link>
         )}
@@ -66,14 +68,14 @@ export default function Dashboard() {
           <div className="h-20 w-20 rounded-2xl bg-muted flex items-center justify-center mb-6">
             <Heart className="h-10 w-10 text-muted-foreground" />
           </div>
-          <h2 className="text-xl font-semibold text-foreground mb-2">No data logged today</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2">{t('noDataLogged')}</h2>
           <p className="text-muted-foreground mb-6 text-center max-w-sm">
-            Log your health metrics to see your recovery score, energy level, and sleep summary.
+            {t('noDataDesc')}
           </p>
           <Link to="/log">
             <Button size="lg" className="gap-2">
               <PlusCircle className="h-5 w-5" />
-              Log Health Metrics
+              {t('logHealthMetrics')}
             </Button>
           </Link>
         </motion.div>
@@ -94,36 +96,36 @@ export default function Dashboard() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <MetricCard
               icon={Heart}
-              label="Resting HR"
+              label={t('restingHR')}
               value={todayLog.heart_rate_avg}
               unit="bpm"
-              subtitle="Average resting"
+              subtitle={t('averageResting')}
               accentColor="text-red-500"
               delay={0.1}
             />
             <MetricCard
               icon={Activity}
-              label="HRV"
+              label={t('hrv')}
               value={todayLog.hrv}
               unit="ms"
-              subtitle="Heart rate variability"
+              subtitle={t('heartRateVariability')}
               accentColor="text-blue-500"
               delay={0.2}
             />
             <MetricCard
               icon={Footprints}
-              label="Steps"
+              label={t('steps')}
               value={todayLog.steps?.toLocaleString()}
-              subtitle={todayLog.steps >= 10000 ? 'Goal reached!' : `${(10000 - todayLog.steps).toLocaleString()} to goal`}
+              subtitle={todayLog.steps >= 10000 ? t('goalReached') : `${(10000 - todayLog.steps).toLocaleString()} ${t('toGoal')}`}
               accentColor="text-emerald-500"
               delay={0.3}
             />
             <MetricCard
               icon={Flame}
-              label="Strain"
+              label={t('strain')}
               value={todayLog.workout_strain}
               unit="/ 21"
-              subtitle="Workout intensity"
+              subtitle={t('workoutIntensity')}
               accentColor="text-orange-500"
               delay={0.4}
             />
@@ -137,7 +139,7 @@ export default function Dashboard() {
               transition={{ delay: 0.5 }}
               className="bg-card rounded-2xl border border-border p-6"
             >
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Notes</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t('notes')}</p>
               <p className="text-foreground">{todayLog.notes}</p>
             </motion.div>
           )}

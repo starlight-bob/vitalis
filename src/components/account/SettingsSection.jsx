@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, Bell, Ruler, Plug, Shield, HelpCircle, LogOut, Zap, Trash2 } from 'lucide-react';
+import { ChevronRight, Bell, Ruler, Plug, Shield, HelpCircle, LogOut, Zap, Trash2, Languages } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/lib/LanguageContext';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -21,6 +22,7 @@ export default function SettingsSection({ user, onUpdate }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
+  const { lang, switchLanguage, t } = useLanguage();
 
   // Sync from user once it loads (handles real iOS where user arrives after mount)
   useEffect(() => {
@@ -68,17 +70,17 @@ export default function SettingsSection({ user, onUpdate }) {
 
   return (
     <div className="px-4 space-y-4">
-      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Settings</h3>
+      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('settings')}</h3>
 
       <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
         {/* Plan */}
         <div className="flex items-center gap-3 px-4 py-3.5">
           <Zap className="h-4.5 w-4.5 text-muted-foreground flex-shrink-0" />
-          <span className="flex-1 text-sm font-medium text-foreground">Current Plan</span>
+          <span className="flex-1 text-sm font-medium text-foreground">{t('currentPlan')}</span>
           <span className={`text-xs font-bold ${PLAN_BADGE[plan].cls}`}>{plan}</span>
           {plan === 'Free' &&
           <button className="ml-2 text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
-              Upgrade
+              {t('upgrade')}
             </button>
           }
         </div>
@@ -86,7 +88,7 @@ export default function SettingsSection({ user, onUpdate }) {
         {/* Notifications */}
         <div className="flex items-center gap-3 px-4 py-3.5">
           <Bell className="h-4.5 w-4.5 text-muted-foreground flex-shrink-0" />
-          <span className="flex-1 text-sm font-medium text-foreground">Notifications</span>
+          <span className="flex-1 text-sm font-medium text-foreground">{t('notifications')}</span>
           <button
             onClick={toggleNotif}
             className={`relative h-5 w-9 rounded-full transition-colors ${notifications ? 'bg-primary' : 'bg-muted'}`}>
@@ -98,26 +100,42 @@ export default function SettingsSection({ user, onUpdate }) {
         {/* Units */}
         <div className="flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-muted/50" onClick={toggleUnits}>
           <Ruler className="h-4.5 w-4.5 text-muted-foreground flex-shrink-0" />
-          <span className="flex-1 text-sm font-medium text-foreground">Units</span>
+          <span className="flex-1 text-sm font-medium text-foreground">{t('units')}</span>
           <span className="text-xs text-muted-foreground">{units}</span>
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
         </div>
 
+        {/* Language */}
+        <div className="flex items-center gap-3 px-4 py-3.5">
+          <Languages className="h-4.5 w-4.5 text-muted-foreground flex-shrink-0" />
+          <span className="flex-1 text-sm font-medium text-foreground">{t('language')}</span>
+          <div className="flex gap-1 bg-muted rounded-lg p-0.5">
+            <button
+              onClick={() => switchLanguage('en')}
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${lang === 'en' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}
+            >EN</button>
+            <button
+              onClick={() => switchLanguage('zh')}
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${lang === 'zh' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}
+            >中文</button>
+          </div>
+        </div>
+
         {/* Connected Devices */}
-        <Row icon={Plug} label="Connected Devices" linkTo="/devices" />
+        <Row icon={Plug} label={t('connectedDevices')} linkTo="/devices" />
 
         {/* Privacy */}
-        <Row icon={Shield} label="Privacy Settings" onClick={() => {}} />
+        <Row icon={Shield} label={t('privacySettings')} onClick={() => {}} />
 
         {/* Help */}
-        <Row icon={HelpCircle} label="Help & Support" onClick={() => {}} />
+        <Row icon={HelpCircle} label={t('helpSupport')} onClick={() => {}} />
       </div>
 
       {/* Sign out */}
       <div className="bg-card border border-border rounded-2xl overflow-hidden">
         <Row
           icon={LogOut}
-          label="Sign Out"
+          label={t('signOut')}
           danger
           onClick={() => base44.auth.logout()} />
         
@@ -128,7 +146,7 @@ export default function SettingsSection({ user, onUpdate }) {
         <div className="bg-card border border-destructive/30 rounded-2xl overflow-hidden">
           <Row
             icon={Trash2}
-            label="Delete Account"
+            label={t('deleteAccount')}
             danger
             onClick={() => setShowDeleteDialog(true)}
           />
@@ -138,19 +156,19 @@ export default function SettingsSection({ user, onUpdate }) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Account?</AlertDialogTitle>
+            <AlertDialogTitle>{t('deleteAccountTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete your account and all associated data — including health logs, lab results, journal entries, and device connections. <strong>This action cannot be undone.</strong>
+              {t('deleteAccountDesc')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleDeleteAccount}
             >
-              {isDeleting ? 'Deleting…' : 'Delete My Account'}
+              {isDeleting ? t('deleting') : t('deleteMyAccount')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

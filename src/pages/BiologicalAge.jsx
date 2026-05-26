@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Dna, Loader2, Info } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 import { calculateBioAge, buildBioAgeTrend } from '@/lib/bioAgeUtils';
 import BioAgeHero from '@/components/bioage/BioAgeHero';
 import BioAgeRadar from '@/components/bioage/BioAgeRadar';
@@ -13,6 +14,7 @@ import BioAgeTrendChart from '@/components/bioage/BioAgeTrendChart';
 const CHRONO_AGE = 35;
 
 export default function BiologicalAge() {
+  const { t } = useLanguage();
   const { data: rawLogs, isLoading } = useQuery({
     queryKey: ['healthLogs', 'all'],
     queryFn: () => base44.entities.HealthLog.list('-date', 120),
@@ -34,16 +36,16 @@ export default function BiologicalAge() {
     return (
       <div className="space-y-6">
         <div className="pt-8 md:pt-0">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Biological Age</h1>
-          <p className="text-muted-foreground mt-1">Your body's true age based on health biomarkers</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('biologicalAgeTitle')}</h1>
+          <p className="text-muted-foreground mt-1">{t('biologicalAgeDesc')}</p>
         </div>
         <div className="flex flex-col items-center justify-center py-24 bg-card rounded-2xl border border-border">
           <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
             <Dna className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h3 className="text-base font-semibold text-foreground mb-2">Not enough data yet</h3>
+          <h3 className="text-base font-semibold text-foreground mb-2">{t('notEnoughData')}</h3>
           <p className="text-sm text-muted-foreground text-center max-w-xs">
-            Log at least 5 days of health data to calculate your biological age. The more data, the more accurate the estimate.
+            {t('notEnoughDataDesc')}
           </p>
         </div>
       </div>
@@ -57,12 +59,12 @@ export default function BiologicalAge() {
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-8 md:pt-0">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">Biological Age</h1>
-            <p className="text-muted-foreground mt-1">Your body's true age based on health biomarkers</p>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('biologicalAgeTitle')}</h1>
+            <p className="text-muted-foreground mt-1">{t('biologicalAgeDesc')}</p>
           </div>
           <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full border border-border">
             <Info className="h-3.5 w-3.5" />
-            Estimates only · not medical advice
+            {t('estimatesOnly')}
           </div>
         </div>
       </motion.div>
