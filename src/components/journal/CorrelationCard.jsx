@@ -32,33 +32,33 @@ export default function CorrelationCard({ correlation, index }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className={cn('bg-card border rounded-2xl p-4 space-y-3', styles.bg)}
+      className={cn('bg-card border rounded-2xl p-3 space-y-2', styles.bg)}
     >
       {/* Header */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="text-2xl flex-shrink-0">{journalEmoji}</span>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          <span className="text-lg flex-shrink-0">{journalEmoji}</span>
           <div className="min-w-0">
-            <p className="text-sm font-bold text-foreground leading-tight">
+            <p className="text-xs font-bold text-foreground leading-tight truncate">
               {journalLabel} → {healthEmoji} {healthLabel}
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{insightText}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug line-clamp-2">{insightText}</p>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+        <div className="flex items-center gap-1.5 flex-shrink-0">
           <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', styles.badge)}>
             {styles.text}
           </span>
-          <div className="flex items-center gap-1">
-            <Icon className={cn('h-3.5 w-3.5', iconColor)} />
-            <span className="text-xs font-mono font-bold text-foreground">r={r}</span>
+          <div className="flex items-center gap-0.5">
+            <Icon className={cn('h-3 w-3', iconColor)} />
+            <span className="text-[11px] font-mono font-bold text-foreground">r={r}</span>
           </div>
         </div>
       </div>
 
       {/* Scatter plot */}
       {scatterData.length >= 5 && (
-        <div className="h-28">
+        <div className="h-24">
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart margin={{ top: 4, right: 4, bottom: 4, left: 4 }}>
               <XAxis
@@ -95,7 +95,7 @@ export default function CorrelationCard({ correlation, index }) {
       )}
 
       {/* Footer */}
-      <p className="text-[10px] text-muted-foreground">Based on {dataPoints} days of data</p>
+      <p className="text-[10px] text-muted-foreground">Based on {dataPoints} days</p>
     </motion.div>
   );
 }
