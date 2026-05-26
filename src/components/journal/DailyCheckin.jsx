@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronRight, Check, Settings2 } from 'lucide-react';
+import { X, ChevronRight, Check, Settings2, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { JOURNAL_QUESTIONS, getEnabledQuestions } from '@/lib/correlationEngine';
 import { cn } from '@/lib/utils';
+import { format, subDays } from 'date-fns';
 
 function QuestionInput({ q, value, onChange }) {
   if (q.type === 'boolean') {
@@ -67,11 +68,15 @@ function QuestionInput({ q, value, onChange }) {
   );
 }
 
-export default function DailyCheckin({ onSave, onClose, settings, existingEntry }) {
+export default function DailyCheckin({ onSave, onClose, settings, existingEntry, initialDate }) {
   const enabledKeys = getEnabledQuestions(settings);
   const activeQuestions = JOURNAL_QUESTIONS.filter(q => enabledKeys.includes(q.key));
 
-  const [step, setStep] = useState(0); // 0 = questions, 1 = done
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+  const [selectedDate, setSelectedDate] = useState(initialDate || today);
+
+  const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState(() => {
     const init = {};
     if (existingEntry) {
@@ -90,7 +95,7 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry 
 
   const handleNext = () => {
     if (isLast) {
-      onSave(answers);
+      onSave(answers, selectedDate);
     } else {
       setStep(s => s + 1);
     }
@@ -184,6 +189,39 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry 
             <button onClick={onClose} className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
               <X className="h-4 w-4 text-muted-foreground" />
             </button>
+          </div>
+        </div>
+
+        {/* Date selector */}
+        <div className="flex items-center gap-2 bg-muted rounded-xl p-1">
+          <CalendarDays className="h-4 w-4 text-muted-foreground ml-2 flex-shrink-0" />
+          <button
+            onClick={() => setSelectedDate(today)}
+            className={cn(
+              'flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all',
+              selectedDate === today ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
+            )}
+          >Today</button>
+          <button
+            onClick={() => setSelectedDate(yesterday)}
+            className={cn(
+              'flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all',
+              selectedDate === yesterday ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
+            )}
+          >Yesterday</button>
+          <div className="flex-1 relative">
+            <input
+              type="date"
+              value={selectedDate}
+              max={today}
+              onChange={e => setSelectedDate(e.target.value)}
+              className={cn(
+                'w-full py-1.5 rounded-lg text-xs font-semibold bg-transparent text-center cursor-pointer transition-all focus:outline-none',
+                selectedDate !== today && selectedDate !== yesterday
+                  ? 'bg-card text-foreground shadow-sm'
+                  : 'text-muted-foreground'
+              )}
+            />
           </div>
         </div>
 

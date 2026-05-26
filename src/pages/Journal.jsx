@@ -52,11 +52,12 @@ export default function Journal() {
 
   // Mutations
   const saveEntryMutation = useMutation({
-    mutationFn: async (answers) => {
-      if (todayEntry?.id) {
-        return base44.entities.JournalEntry.update(todayEntry.id, answers);
+    mutationFn: async ({ answers, date }) => {
+      const existingForDate = entries.find(e => e.date === date);
+      if (existingForDate?.id) {
+        return base44.entities.JournalEntry.update(existingForDate.id, answers);
       }
-      return base44.entities.JournalEntry.create({ date: TODAY, ...answers });
+      return base44.entities.JournalEntry.create({ date, ...answers });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['journalEntries'] });
@@ -77,13 +78,13 @@ export default function Journal() {
     },
   });
 
-  const handleCheckinSave = (answers) => {
+  const handleCheckinSave = (answers, date) => {
     // Settings-only save (from customise screen)
     if (answers.__settings) {
       saveSettingsMutation.mutate(answers.__settings);
       return;
     }
-    saveEntryMutation.mutate(answers);
+    saveEntryMutation.mutate({ answers, date });
   };
 
   // Correlations computation (memoized)
@@ -243,6 +244,7 @@ export default function Journal() {
             onClose={() => setShowCheckin(false)}
             settings={settings}
             existingEntry={todayEntry}
+            initialDate={TODAY}
           />
         )}
       </AnimatePresence>
