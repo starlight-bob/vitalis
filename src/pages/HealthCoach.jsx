@@ -130,14 +130,22 @@ Coach:`;
 
   const showSuggestions = messages.length <= 1 && !isLoading;
 
+  // Height: full viewport minus top nav (desktop sidebar offset handled by layout)
+  // On mobile we subtract the bottom nav (~64px) + safe area
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)] md:h-[calc(100vh-3rem)] max-h-[900px] mt-8 md:-mt-6 -mx-4 sm:-mx-6 lg:-mx-8 bg-background">
+    <div className="flex flex-col -mx-4 sm:-mx-6 lg:-mx-8 bg-background"
+      style={{ height: 'calc(100dvh - 5rem)', maxHeight: 900, marginTop: 32 }}
+    >
       {/* Inner container */}
-      <div className="flex flex-col flex-1 overflow-hidden max-w-3xl mx-auto w-full px-4 sm:px-6 pt-6">
-        <CoachHeader logsCount={logs.length} labCount={labResults.length} />
+      <div className="flex flex-col flex-1 overflow-hidden max-w-3xl mx-auto w-full pt-4 md:pt-6">
+        <div className="px-4 sm:px-6">
+          <CoachHeader logsCount={logs.length} labCount={labResults.length} />
+        </div>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto py-2 space-y-2 scrollbar-thin">
+        {/* Scrollable messages — padded so last message clears the floating input bar */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-2 space-y-2 scrollbar-thin"
+          style={{ paddingBottom: showSuggestions ? 220 : 100 }}
+        >
           {messages.map((msg, i) => (
             <ChatMessage key={i} message={msg} index={i} />
           ))}
@@ -145,8 +153,16 @@ Coach:`;
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
-        <div className="pb-2 pt-1.5 space-y-1.5 border-t border-white/10">
+        {/* Floating input container — pinned above bottom nav */}
+        <div
+          className="flex-shrink-0 px-4 sm:px-6 pt-3 pb-3 space-y-2 border-t border-border/40"
+          style={{
+            paddingBottom: 'calc(12px + env(safe-area-inset-bottom))',
+            background: 'rgba(var(--background) / 0.7)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
           {showSuggestions && (
             <SuggestedPrompts onSelect={sendMessage} disabled={isLoading} />
           )}
@@ -160,7 +176,7 @@ Coach:`;
               placeholder="Ask your Health Coach anything…"
               rows={1}
               className={cn(
-                "resize-none flex-1 bg-card border-white/10 rounded-xl text-sm placeholder:text-muted-foreground",
+                "resize-none flex-1 bg-card/80 border-border/50 rounded-xl text-sm placeholder:text-muted-foreground",
                 "focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/30",
                 "min-h-[44px] max-h-[120px] py-3 px-4 transition-all"
               )}
