@@ -1,10 +1,20 @@
 import { cn } from '@/lib/utils';
 import { HEALTH_METRICS } from '@/lib/correlationEngine';
+import { useLanguage } from '@/lib/LanguageContext';
 
-const ALL = { key: 'all', label: 'All', emoji: '🔍' };
-const FILTERS = [ALL, ...HEALTH_METRICS];
+const HM_KEYS = {
+  sleep_score: 'hmSleepScore',
+  hrv: 'hmHrv',
+  recovery_score: 'hmRecovery',
+  sleep_duration: 'hmSleepDuration',
+  resting_hr: 'hmRestingHR',
+};
 
 export default function CorrelationFilters({ active, onChange }) {
+  const { t } = useLanguage();
+  const ALL = { key: 'all', label: t('catAll'), emoji: '🔍' };
+  const FILTERS = [ALL, ...HEALTH_METRICS.map(m => ({ ...m, label: t(HM_KEYS[m.key]) || m.label }))];
+
   return (
     <div className="flex gap-2 overflow-x-auto pb-1 w-full" style={{ scrollbarWidth: 'none' }}>
       {FILTERS.map(f => (

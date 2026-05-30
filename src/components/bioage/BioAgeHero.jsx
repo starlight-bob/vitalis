@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { Dna, TrendingDown, TrendingUp, Minus } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function BioAgeHero({ bioAge, chronoAge, delta, dataPoints }) {
+  const { t } = useLanguage();
   const younger = delta < 0;
   const same = delta === 0;
   const absDelta = Math.abs(delta);
@@ -23,7 +25,7 @@ export default function BioAgeHero({ bioAge, chronoAge, delta, dataPoints }) {
 
         {/* Main number */}
         <div className="flex-1">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">Biological Age</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">{t('bioAgeLabel')}</p>
           <div className="flex items-baseline gap-4">
             <motion.span
               className="text-7xl font-black tracking-tighter text-foreground"
@@ -33,9 +35,9 @@ export default function BioAgeHero({ bioAge, chronoAge, delta, dataPoints }) {
             >
               {bioAge}
             </motion.span>
-            <span className="text-2xl text-muted-foreground font-light">yrs</span>
+            <span className="text-2xl text-muted-foreground font-light">{t('yrs')}</span>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">Chronological age: {chronoAge}</p>
+          <p className="text-sm text-muted-foreground mt-1">{t('chronologicalAge')}: {chronoAge}</p>
         </div>
 
         {/* Delta callout */}
@@ -47,14 +49,14 @@ export default function BioAgeHero({ bioAge, chronoAge, delta, dataPoints }) {
             </span>
           </div>
           <p className={`text-xs font-medium text-center leading-tight ${younger ? 'text-emerald-400' : same ? 'text-muted-foreground' : 'text-orange-400'}`}>
-            {same ? 'At your chronological age' : younger ? `${absDelta} yr${absDelta !== 1 ? 's' : ''} younger than real age` : `${absDelta} yr${absDelta !== 1 ? 's' : ''} older than real age`}
+            {same ? t('atChronoAge') : younger ? `${absDelta} ${t('yr')}${absDelta !== 1 ? 's' : ''} ${t('yngrThanReal')}` : `${absDelta} ${t('yr')}${absDelta !== 1 ? 's' : ''} ${t('oldrThanReal')}`}
           </p>
         </div>
       </div>
 
       <div className="relative mt-6 pt-4 border-t border-border/50 flex items-center gap-2">
         <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-        <p className="text-xs text-muted-foreground">Based on {dataPoints} days of logged health data · estimates improve with more data</p>
+        <p className="text-xs text-muted-foreground">{t('basedOnDays')} {dataPoints} {t('daysLogged')}</p>
       </div>
     </motion.div>
   );

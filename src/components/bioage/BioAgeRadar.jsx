@@ -1,18 +1,20 @@
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/LanguageContext';
 
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload, tFn }) => {
   if (!active || !payload?.length) return null;
   const d = payload[0]?.payload;
   return (
     <div className="bg-card border border-border rounded-xl px-3 py-2 text-xs shadow-xl">
       <p className="font-semibold text-foreground">{d.label}</p>
-      <p className="text-muted-foreground">Age: <span className="text-foreground font-bold">{d.age}</span></p>
+      <p className="text-muted-foreground">{tFn ? tFn('bioAgeTooltipAge') : 'Age'}: <span className="text-foreground font-bold">{d.age}</span></p>
     </div>
   );
 };
 
 export default function BioAgeRadar({ systems, chronoAge }) {
+  const { t } = useLanguage();
   const data = systems.map(s => ({
     label: s.label,
     age: s.age,
@@ -27,8 +29,8 @@ export default function BioAgeRadar({ systems, chronoAge }) {
       transition={{ delay: 0.1 }}
       className="bg-card border border-border rounded-2xl p-6"
     >
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">System Overview</p>
-      <p className="text-sm text-foreground font-medium mb-4">Biological systems radar</p>
+      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">{t('systemOverview')}</p>
+      <p className="text-sm text-foreground font-medium mb-4">{t('bioSystemsRadar')}</p>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -44,17 +46,17 @@ export default function BioAgeRadar({ systems, chronoAge }) {
             fillOpacity={0.15}
             strokeWidth={2}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip tFn={t} />} />
         </RadarChart>
       </ResponsiveContainer>
       <div className="flex items-center gap-4 justify-center mt-2">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <div className="h-2 w-2 rounded-full bg-primary" />
-          Your systems
+          {t('yourSystems')}
         </div>
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <div className="h-2 w-2 rounded-full bg-emerald-400" />
-          Higher = younger
+          {t('higherYounger')}
         </div>
       </div>
     </motion.div>

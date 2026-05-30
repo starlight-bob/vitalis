@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const PLAN_COLORS = {
   Free: 'bg-muted text-muted-foreground',
@@ -12,10 +13,11 @@ const PLAN_COLORS = {
 export default function ProfileHeader({ user, streak, onAvatarUpdate }) {
   const inputRef = useRef();
   const [uploading, setUploading] = useState(false);
+  const { t, lang } = useLanguage();
 
   const memberSince = user?.created_date
-    ? new Date(user.created_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-    : 'Recently joined';
+    ? new Date(user.created_date).toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', { month: 'long', year: 'numeric' })
+    : t('restartStreak');
 
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
@@ -61,11 +63,11 @@ export default function ProfileHeader({ user, streak, onAvatarUpdate }) {
 
       {/* Plan badge */}
       <span className={`text-xs font-semibold px-3 py-1 rounded-full mb-3 ${PLAN_COLORS[user?.plan || 'Free']}`}>
-        {user?.plan || 'Free'} Member
+        {user?.plan || 'Free'} {t('member')}
       </span>
 
       {/* Member since */}
-      <p className="text-xs text-muted-foreground mb-4">Member since {memberSince}</p>
+      <p className="text-xs text-muted-foreground mb-4">{t('memberSince')} {memberSince}</p>
 
       {/* Streak */}
       <div className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border ${
@@ -74,13 +76,13 @@ export default function ProfileHeader({ user, streak, onAvatarUpdate }) {
         <span className="text-2xl">🔥</span>
         {streak > 0 ? (
           <div>
-            <p className="text-lg font-black text-orange-400 leading-none">{streak} Day Streak</p>
-            <p className="text-[11px] text-orange-400/70">Keep it up!</p>
+            <p className="text-lg font-black text-orange-400 leading-none">{streak} {t('dayStreak')}</p>
+            <p className="text-[11px] text-orange-400/70">{t('keepItUp')}</p>
           </div>
         ) : (
           <div>
-            <p className="text-sm font-bold text-muted-foreground">No active streak</p>
-            <p className="text-[11px] text-muted-foreground">Restart your streak! 💡</p>
+            <p className="text-sm font-bold text-muted-foreground">{t('noActiveStreak')}</p>
+            <p className="text-[11px] text-muted-foreground">{t('restartStreak')}</p>
           </div>
         )}
       </div>

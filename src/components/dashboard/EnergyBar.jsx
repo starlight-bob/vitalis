@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import { calculateEnergyLevel } from '@/lib/healthUtils';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function EnergyBar({ log }) {
-  const { level, label } = calculateEnergyLevel(log);
+  const { t } = useLanguage();
+  const { level, label } = calculateEnergyLevel(log, t);
 
   const getBarColor = () => {
     if (level >= 75) return 'bg-green-500';
@@ -21,7 +23,7 @@ export default function EnergyBar({ log }) {
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-          <Zap className="h-4 w-4 text-yellow-500" /> Energy Level
+          <Zap className="h-4 w-4 text-yellow-500" /> {t('energyLevel')}
         </h3>
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </div>

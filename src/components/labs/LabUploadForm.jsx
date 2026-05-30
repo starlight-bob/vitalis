@@ -10,12 +10,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-
-const isMobile = () => window.innerWidth < 768;
+import { useLanguage } from '@/lib/LanguageContext';
 
 const CATEGORIES = ['Blood Work', 'Imaging', 'Urine', 'Hormone Panel', 'Other'];
 
 export default function LabUploadForm({ onClose, existing }) {
+  const { t } = useLanguage();
   const today = new Date().toISOString().split('T')[0];
   const [form, setForm] = useState({
     title: existing?.title || '',
@@ -45,7 +45,7 @@ export default function LabUploadForm({ onClose, existing }) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['labResults'] });
-      toast.success(existing ? 'Record updated' : 'Lab result saved');
+      toast.success(existing ? t('recordUpdated') : t('labResultSaved'));
       onClose();
     },
   });
@@ -54,7 +54,7 @@ export default function LabUploadForm({ onClose, existing }) {
     if (f && (f.type.startsWith('image/') || f.type === 'application/pdf')) {
       setFile(f);
     } else {
-      toast.error('Please upload a PDF or image file');
+      toast.error(t('invalidFileType'));
     }
   };
 
@@ -77,7 +77,7 @@ export default function LabUploadForm({ onClose, existing }) {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-base font-semibold text-foreground">
-            {existing ? 'Edit Record' : 'Add Lab Result'}
+            {existing ? t('editRecord') : t('addLabResult')}
           </h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-5 w-5" />
@@ -87,7 +87,7 @@ export default function LabUploadForm({ onClose, existing }) {
         <div className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
           {/* Title */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground uppercase tracking-wider">Title</Label>
+            <Label className="text-xs text-muted-foreground uppercase tracking-wider">{t('title')}</Label>
             <Input
               value={form.title}
               onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
@@ -99,7 +99,7 @@ export default function LabUploadForm({ onClose, existing }) {
           {/* Date + Category */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground uppercase tracking-wider">Date</Label>
+              <Label className="text-xs text-muted-foreground uppercase tracking-wider">{t('date')}</Label>
               <Input
                 type="date"
                 value={form.date}
@@ -108,21 +108,21 @@ export default function LabUploadForm({ onClose, existing }) {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground uppercase tracking-wider">Category</Label>
+              <Label className="text-xs text-muted-foreground uppercase tracking-wider">{t('category')}</Label>
               <button
                 type="button"
                 onClick={() => setSheetOpen(true)}
                 className="w-full flex items-center justify-between px-3 py-2 rounded-md border border-border bg-background text-sm text-foreground"
               >
                 <span className={form.category ? 'text-foreground' : 'text-muted-foreground'}>
-                  {form.category || 'Select…'}
+                  {form.category || t('selectCategory')}
                 </span>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </button>
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetContent side="bottom" className="rounded-t-2xl pb-safe">
                   <SheetHeader className="mb-4">
-                    <SheetTitle>Select Category</SheetTitle>
+                    <SheetTitle>{t('selectCategorySheet')}</SheetTitle>
                   </SheetHeader>
                   <div className="space-y-1">
                     {CATEGORIES.map(c => (
@@ -147,7 +147,7 @@ export default function LabUploadForm({ onClose, existing }) {
           {/* File drop zone */}
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground uppercase tracking-wider">
-              Document <span className="normal-case text-muted-foreground/60">(PDF or image)</span>
+              {t('document')} <span className="normal-case text-muted-foreground/60">{t('pdfOrImage')}</span>
             </Label>
             <div
               onClick={() => fileRef.current?.click()}
@@ -170,14 +170,14 @@ export default function LabUploadForm({ onClose, existing }) {
               ) : existing?.file_url ? (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <FileText className="h-4 w-4" />
-                  <span>{existing.file_name || 'Existing file'}</span>
-                  <span className="text-xs">(upload new to replace)</span>
+                  <span>{existing.file_name || t('existingFile')}</span>
+                  <span className="text-xs">{t('uploadNewToReplace')}</span>
                 </div>
               ) : (
                 <div className="space-y-1">
                   <Upload className="h-6 w-6 text-muted-foreground mx-auto" />
-                  <p className="text-sm text-muted-foreground">Drop file here or <span className="text-primary">browse</span></p>
-                  <p className="text-xs text-muted-foreground/60">PDF, JPG, PNG up to 25MB</p>
+                  <p className="text-sm text-muted-foreground">{t('dropFileHere')} <span className="text-primary">{t('browse')}</span></p>
+                  <p className="text-xs text-muted-foreground/60">{t('pdfSizeLimit')}</p>
                 </div>
               )}
             </div>
@@ -186,7 +186,7 @@ export default function LabUploadForm({ onClose, existing }) {
 
           {/* Notes */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground uppercase tracking-wider">Notes</Label>
+            <Label className="text-xs text-muted-foreground uppercase tracking-wider">{t('notesLabel')}</Label>
             <Textarea
               value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
@@ -197,16 +197,16 @@ export default function LabUploadForm({ onClose, existing }) {
         </div>
 
         <div className="px-6 py-4 border-t border-border flex gap-3">
-          <Button variant="outline" onClick={onClose} className="flex-1">Cancel</Button>
+          <Button variant="outline" onClick={onClose} className="flex-1">{t('cancel')}</Button>
           <Button
             onClick={() => saveMutation.mutate()}
             disabled={!valid || saveMutation.isPending}
             className="flex-1 gap-2"
           >
             {saveMutation.isPending || uploading ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> {uploading ? 'Uploading…' : 'Saving…'}</>
+              <><Loader2 className="h-4 w-4 animate-spin" /> {uploading ? t('uploading') : t('saving')}</>
             ) : (
-              <><CheckCircle2 className="h-4 w-4" /> {existing ? 'Update' : 'Save Record'}</>
+              <><CheckCircle2 className="h-4 w-4" /> {existing ? t('update') : t('saveRecord')}</>
             )}
           </Button>
         </div>

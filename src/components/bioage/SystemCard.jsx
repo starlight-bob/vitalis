@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function SystemCard({ system, chronoAge, delay = 0 }) {
+  const { t } = useLanguage();
   const { label, age, delta, icon, description } = system;
   const younger = delta < 0;
   const same = delta === 0;
@@ -34,7 +36,7 @@ export default function SystemCard({ system, chronoAge, delay = 0 }) {
       {/* Age display */}
       <div className="flex items-baseline gap-1.5 mb-3">
         <span className="text-4xl font-black tracking-tighter text-foreground">{age}</span>
-        <span className="text-sm text-muted-foreground">yrs</span>
+        <span className="text-sm text-muted-foreground">{t('yrs')}</span>
       </div>
 
       {/* Bar */}
@@ -49,8 +51,8 @@ export default function SystemCard({ system, chronoAge, delay = 0 }) {
           />
         </div>
         <div className="flex justify-between text-[10px] text-muted-foreground">
-          <span>Optimal</span>
-          <span>Needs attention</span>
+          <span>{t('optimal')}</span>
+          <span>{t('needsAttention')}</span>
         </div>
       </div>
     </motion.div>

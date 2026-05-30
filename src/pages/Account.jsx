@@ -9,8 +9,10 @@ import BadgesSection from '@/components/account/BadgesSection';
 import FriendsSection from '@/components/account/FriendsSection';
 import SettingsSection from '@/components/account/SettingsSection';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Account() {
+  const { t } = useLanguage();
   const [avatarUrl, setAvatarUrl] = useState(null);
 
   const { data: me, isLoading: meLoading, isError: meError } = useQuery({
@@ -57,8 +59,8 @@ export default function Account() {
     return (
       <div className="flex flex-col items-center justify-center py-32 gap-3">
         <span className="text-4xl">👤</span>
-        <p className="text-base font-semibold text-foreground">Couldn't load profile</p>
-        <p className="text-sm text-muted-foreground text-center max-w-xs">Please check your connection and try again.</p>
+        <p className="text-base font-semibold text-foreground">{t('couldntLoadProfile')}</p>
+        <p className="text-sm text-muted-foreground text-center max-w-xs">{t('checkConnection')}</p>
       </div>
     );
   }

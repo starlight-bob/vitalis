@@ -32,27 +32,29 @@ export function calculateRecoveryScore(log) {
 /**
  * Get recovery level label and color
  */
-export function getRecoveryLevel(score) {
-  if (score >= 80) return { label: 'Excellent', color: 'text-green-500', bg: 'bg-green-500' };
-  if (score >= 60) return { label: 'Good', color: 'text-emerald-400', bg: 'bg-emerald-400' };
-  if (score >= 40) return { label: 'Moderate', color: 'text-yellow-500', bg: 'bg-yellow-500' };
-  if (score >= 20) return { label: 'Low', color: 'text-orange-500', bg: 'bg-orange-500' };
-  return { label: 'Poor', color: 'text-red-500', bg: 'bg-red-500' };
+export function getRecoveryLevel(score, t) {
+  const label = (k, fallback) => (t ? t(k) : fallback);
+  if (score >= 80) return { label: label('recoveryExcellent', 'Excellent'), color: 'text-green-500', bg: 'bg-green-500' };
+  if (score >= 60) return { label: label('recoveryGood', 'Good'), color: 'text-emerald-400', bg: 'bg-emerald-400' };
+  if (score >= 40) return { label: label('recoveryModerate', 'Moderate'), color: 'text-yellow-500', bg: 'bg-yellow-500' };
+  if (score >= 20) return { label: label('recoveryLow', 'Low'), color: 'text-orange-500', bg: 'bg-orange-500' };
+  return { label: label('recoveryPoor', 'Poor'), color: 'text-red-500', bg: 'bg-red-500' };
 }
 
 /**
  * Calculate energy level based on recovery, strain, and steps
  */
-export function calculateEnergyLevel(log) {
-  if (!log) return { level: 0, label: 'No Data' };
+export function calculateEnergyLevel(log, t) {
+  const label = (k, fallback) => (t ? t(k) : fallback);
+  if (!log) return { level: 0, label: label('energyNoData', 'No Data') };
   const recovery = calculateRecoveryScore(log);
   const strainPenalty = (log.workout_strain / 21) * 30;
   const energy = Math.max(0, Math.min(100, recovery - strainPenalty + 10));
   
-  if (energy >= 75) return { level: Math.round(energy), label: 'High Energy' };
-  if (energy >= 50) return { level: Math.round(energy), label: 'Moderate' };
-  if (energy >= 25) return { level: Math.round(energy), label: 'Low Energy' };
-  return { level: Math.round(energy), label: 'Rest Day' };
+  if (energy >= 75) return { level: Math.round(energy), label: label('energyHigh', 'High Energy') };
+  if (energy >= 50) return { level: Math.round(energy), label: label('energyMed', 'Moderate') };
+  if (energy >= 25) return { level: Math.round(energy), label: label('energyLow', 'Low Energy') };
+  return { level: Math.round(energy), label: label('energyRest', 'Rest Day') };
 }
 
 /**

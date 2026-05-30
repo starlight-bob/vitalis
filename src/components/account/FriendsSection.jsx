@@ -3,11 +3,13 @@ import { motion } from 'framer-motion';
 import { UserPlus, Trophy, Flame, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/lib/LanguageContext';
 
 // Mock friends data — in a real app you'd fetch friends' public stats
 const MOCK_FRIENDS = [];
 
 export default function FriendsSection({ user }) {
+  const { t } = useLanguage();
   const [addOpen, setAddOpen] = useState(false);
   const [inviteInput, setInviteInput] = useState('');
   const [copied, setCopied] = useState(false);
@@ -23,9 +25,9 @@ export default function FriendsSection({ user }) {
   return (
     <div className="px-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Friends</h3>
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('friends')}</h3>
         <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5" onClick={() => setAddOpen(v => !v)}>
-          <UserPlus className="h-3.5 w-3.5" /> Add Friend
+          <UserPlus className="h-3.5 w-3.5" /> {t('addFriend')}
         </Button>
       </div>
 
@@ -37,15 +39,15 @@ export default function FriendsSection({ user }) {
         >
           <div className="flex gap-2">
             <Input
-              placeholder="Enter username or email…"
+              placeholder={t('enterUsernameEmail')}
               value={inviteInput}
               onChange={e => setInviteInput(e.target.value)}
               className="h-8 text-sm bg-card"
             />
-            <Button size="sm" className="h-8 text-xs flex-shrink-0">Invite</Button>
+            <Button size="sm" className="h-8 text-xs flex-shrink-0">{t('invite')}</Button>
           </div>
           <div className="border-t border-border pt-3">
-            <p className="text-xs text-muted-foreground mb-1.5">Or share your invite link</p>
+            <p className="text-xs text-muted-foreground mb-1.5">{t('orShareLink')}</p>
             <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2">
               <span className="text-xs text-muted-foreground flex-1 truncate">{inviteLink}</span>
               <button onClick={copyLink} className="flex-shrink-0">
@@ -59,8 +61,8 @@ export default function FriendsSection({ user }) {
       {MOCK_FRIENDS.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 bg-muted/20 rounded-2xl border border-border">
           <span className="text-3xl mb-2">🦋</span>
-          <p className="text-sm font-medium text-foreground mb-1">No friends yet</p>
-          <p className="text-xs text-muted-foreground text-center max-w-xs">Invite friends to compare streaks and recovery scores</p>
+          <p className="text-sm font-medium text-foreground mb-1">{t('noFriendsYet')}</p>
+          <p className="text-xs text-muted-foreground text-center max-w-xs">{t('noFriendsDesc')}</p>
         </div>
       ) : (
         <div className="space-y-3">

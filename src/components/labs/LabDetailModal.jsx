@@ -6,8 +6,10 @@ import { format } from 'date-fns';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function LabDetailModal({ result, onClose, onEdit }) {
+  const { t } = useLanguage();
   const qc = useQueryClient();
   const isImage = result.file_type?.startsWith('image/');
   const isPdf = result.file_type === 'application/pdf';
@@ -23,11 +25,11 @@ export default function LabDetailModal({ result, onClose, onEdit }) {
     },
     onError: (_err, _vars, ctx) => {
       if (ctx?.prev) qc.setQueryData(['labResults'], ctx.prev);
-      toast.error('Failed to delete record');
+      toast.error(t('deleteFailMsg'));
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['labResults'] });
-      toast.success('Record deleted');
+      toast.success(t('deleteSuccessMsg'));
     },
   });
 
@@ -81,7 +83,7 @@ export default function LabDetailModal({ result, onClose, onEdit }) {
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center space-y-2">
                     <FileText className="h-12 w-12 text-muted-foreground mx-auto" />
-                    <p className="text-sm text-muted-foreground">{result.file_name || 'Document'}</p>
+                    <p className="text-sm text-muted-foreground">{result.file_name || t('document')}</p>
                   </div>
                 </div>
               )}
@@ -92,7 +94,7 @@ export default function LabDetailModal({ result, onClose, onEdit }) {
             <div className="flex items-center justify-center py-12 border-b border-border">
               <div className="text-center space-y-2">
                 <FileText className="h-10 w-10 text-muted-foreground/40 mx-auto" />
-                <p className="text-xs text-muted-foreground">No document attached</p>
+                <p className="text-xs text-muted-foreground">{t('noDocAttached')}</p>
               </div>
             </div>
           )}
@@ -101,7 +103,7 @@ export default function LabDetailModal({ result, onClose, onEdit }) {
           {result.notes && (
             <div className="px-6 py-4">
               <div className="flex items-center gap-2 text-xs text-muted-foreground uppercase tracking-wider mb-2">
-                <StickyNote className="h-3.5 w-3.5" /> Notes
+                <StickyNote className="h-3.5 w-3.5" /> {t('notesLabel')}
               </div>
               <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{result.notes}</p>
             </div>
@@ -113,7 +115,7 @@ export default function LabDetailModal({ result, onClose, onEdit }) {
           {result.file_url && (
             <a href={result.file_url} target="_blank" rel="noopener noreferrer" download>
               <Button variant="outline" size="sm" className="gap-1.5 text-muted-foreground">
-                <Download className="h-3.5 w-3.5" /> Download
+                <Download className="h-3.5 w-3.5" /> {t('download')}
               </Button>
             </a>
           )}
@@ -125,10 +127,10 @@ export default function LabDetailModal({ result, onClose, onEdit }) {
             onClick={() => deleteMutation.mutate()}
             disabled={deleteMutation.isPending}
           >
-            <Trash2 className="h-3.5 w-3.5" /> Delete
+            <Trash2 className="h-3.5 w-3.5" /> {t('delete')}
           </Button>
           <Button size="sm" className="gap-1.5" onClick={() => { onClose(); onEdit(result); }}>
-            <Edit2 className="h-3.5 w-3.5" /> Edit
+            <Edit2 className="h-3.5 w-3.5" /> {t('edit')}
           </Button>
         </div>
       </motion.div>

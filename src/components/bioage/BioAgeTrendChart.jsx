@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts';
+import { useLanguage } from '@/lib/LanguageContext';
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, tFn }) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-card border border-border rounded-xl px-3 py-2.5 text-xs shadow-xl space-y-1">
       <p className="font-semibold text-foreground">{label}</p>
       {payload.map(p => (
         <p key={p.dataKey} style={{ color: p.color }} className="font-medium">
-          {p.name}: {p.value} yrs
+          {p.name}: {p.value} {tFn ? tFn('yrs') : 'yrs'}
         </p>
       ))}
     </div>
@@ -16,6 +17,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function BioAgeTrendChart({ trendData, chronoAge }) {
+  const { t } = useLanguage();
   const hasData = trendData.some(d => d.bioAge !== null);
 
   return (
@@ -26,13 +28,13 @@ export default function BioAgeTrendChart({ trendData, chronoAge }) {
       className="bg-card border border-border rounded-2xl p-6"
     >
       <div className="mb-5">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">6-Month Trend</p>
-        <p className="text-sm text-foreground font-medium">Biological age over time</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">{t('bioAgeTrend')}</p>
+        <p className="text-sm text-foreground font-medium">{t('bioAgeOverTime')}</p>
       </div>
 
       {!hasData ? (
         <div className="flex items-center justify-center h-48 text-sm text-muted-foreground">
-          Need at least 3 days of data per month to plot trend
+          {t('needMoreTrendData')}
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={200}>
@@ -46,18 +48,18 @@ export default function BioAgeTrendChart({ trendData, chronoAge }) {
               tickLine={false}
               width={30}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip tFn={t} />} />
             <ReferenceLine
               y={chronoAge}
               stroke="hsl(var(--muted-foreground))"
               strokeDasharray="4 4"
               strokeOpacity={0.5}
-              label={{ value: 'Real age', fill: 'hsl(var(--muted-foreground))', fontSize: 10, position: 'right' }}
+              label={{ value: t('realAge'), fill: 'hsl(var(--muted-foreground))', fontSize: 10, position: 'right' }}
             />
             <Line
               type="monotone"
               dataKey="bioAge"
-              name="Bio Age"
+              name={t('bioAgeLabel')}
               stroke="hsl(var(--primary))"
               strokeWidth={2.5}
               dot={{ fill: 'hsl(var(--primary))', r: 4, strokeWidth: 0 }}

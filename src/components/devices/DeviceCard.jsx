@@ -3,8 +3,10 @@ import { CheckCircle2, Circle, RefreshCw, Link2, Link2Off, Clock } from 'lucide-
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function DeviceCard({ device, connection, onConnect, onDisconnect, isSyncing, isUpdating }) {
+  const { t } = useLanguage();
   const isConnected = connection?.connected ?? false;
   const lastSync = connection?.last_sync;
   const busy = isSyncing || isUpdating;
@@ -58,7 +60,7 @@ export default function DeviceCard({ device, connection, onConnect, onDisconnect
           ) : (
             <Circle className="h-3 w-3" />
           )}
-          {isConnected ? 'Connected' : 'Not Connected'}
+          {isConnected ? t('connected') : t('notConnected')}
         </div>
       </div>
 
@@ -66,11 +68,11 @@ export default function DeviceCard({ device, connection, onConnect, onDisconnect
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground min-h-[16px]">
         <Clock className="h-3 w-3 flex-shrink-0" />
         {isConnected && lastSync ? (
-          <span>Last synced {formatDistanceToNow(new Date(lastSync), { addSuffix: true })}</span>
+          <span>{t('lastSynced')} {formatDistanceToNow(new Date(lastSync), { addSuffix: true })}</span>
         ) : isConnected ? (
-          <span>Never synced</span>
+          <span>{t('neverSynced')}</span>
         ) : (
-          <span>Connect to start syncing</span>
+          <span>{t('connectToSync')}</span>
         )}
         <AnimatePresence>
           {isSyncing && (
@@ -80,7 +82,7 @@ export default function DeviceCard({ device, connection, onConnect, onDisconnect
               exit={{ opacity: 0 }}
               className="ml-1 text-primary font-medium flex items-center gap-1"
             >
-              <RefreshCw className="h-3 w-3 animate-spin" /> Syncing…
+              <RefreshCw className="h-3 w-3 animate-spin" /> {t('syncing')}
             </motion.span>
           )}
         </AnimatePresence>
@@ -96,7 +98,7 @@ export default function DeviceCard({ device, connection, onConnect, onDisconnect
           disabled={busy}
         >
           <Link2Off className="h-3.5 w-3.5" />
-          Disconnect
+          {t('disconnect')}
         </Button>
       ) : (
         <Button
@@ -106,7 +108,7 @@ export default function DeviceCard({ device, connection, onConnect, onDisconnect
           disabled={busy}
         >
           <Link2 className="h-3.5 w-3.5" />
-          Connect
+          {t('connect')}
         </Button>
       )}
     </motion.div>

@@ -1,14 +1,16 @@
 import { motion } from 'framer-motion';
 import { Moon, Star } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function SleepSummary({ log }) {
+  const { t } = useLanguage();
   if (!log) {
     return (
       <div className="bg-card rounded-2xl border border-border p-6">
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
-          <Moon className="h-4 w-4" /> Sleep Summary
+          <Moon className="h-4 w-4" /> {t('sleepSummary')}
         </h3>
-        <p className="text-muted-foreground text-sm">No sleep data for today</p>
+        <p className="text-muted-foreground text-sm">{t('noSleepData')}</p>
       </div>
     );
   }
@@ -23,12 +25,12 @@ export default function SleepSummary({ log }) {
       className="bg-card rounded-2xl border border-border p-6"
     >
       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
-        <Moon className="h-4 w-4 text-blue-400" /> Sleep Summary
+        <Moon className="h-4 w-4 text-blue-400" /> {t('sleepSummary')}
       </h3>
 
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <p className="text-xs text-muted-foreground mb-1">Duration</p>
+          <p className="text-xs text-muted-foreground mb-1">{t('duration')}</p>
           <p className="text-2xl font-bold text-foreground">
             {log.sleep_duration}<span className="text-sm text-muted-foreground ml-1">hrs</span>
           </p>
@@ -40,11 +42,11 @@ export default function SleepSummary({ log }) {
               transition={{ delay: 0.5, duration: 1 }}
             />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1">Target: 7-9 hrs</p>
+          <p className="text-[10px] text-muted-foreground mt-1">{t('targetSleep')}</p>
         </div>
 
         <div>
-          <p className="text-xs text-muted-foreground mb-1">Quality</p>
+          <p className="text-xs text-muted-foreground mb-1">{t('quality')}</p>
           <p className="text-2xl font-bold text-foreground">
             {log.sleep_quality}<span className="text-sm text-muted-foreground ml-1">/10</span>
           </p>

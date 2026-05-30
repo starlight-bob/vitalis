@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { getRecoveryLevel } from '@/lib/healthUtils';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function RecoveryGauge({ score, size = 200 }) {
-  const { label, color } = getRecoveryLevel(score);
+  const { t } = useLanguage();
+  const { label, color } = getRecoveryLevel(score, t);
   const radius = (size - 24) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
@@ -56,7 +58,7 @@ export default function RecoveryGauge({ score, size = 200 }) {
           <span className={`text-sm font-semibold mt-1 ${color}`}>{label}</span>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground mt-3 uppercase tracking-widest font-medium">Recovery Score</p>
+      <p className="text-xs text-muted-foreground mt-3 uppercase tracking-widest font-medium">{t('recoveryScore')}</p>
     </div>
   );
 }

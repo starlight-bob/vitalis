@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const defaultValues = {
   heart_rate_avg: 65,
@@ -29,6 +30,7 @@ export default function LogEntry() {
   const [form, setForm] = useState(defaultValues);
   const [saved, setSaved] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: existingLogs = [] } = useQuery({
@@ -77,7 +79,7 @@ export default function LogEntry() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['healthLogs'] });
       setSaved(true);
-      toast.success(existingLog ? 'Health log updated!' : 'Health log saved!');
+      toast.success(existingLog ? t('recordUpdated') : t('labResultSaved'));
       setTimeout(() => navigate('/'), 1000);
     },
   });
@@ -93,11 +95,11 @@ export default function LogEntry() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
-      <MobileHeader title="Log Metrics" backTo="/" />
+      <MobileHeader title={t('logMetrics')} backTo="/" />
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="hidden md:block">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Log Health Metrics</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('logEntryTitle')}</h1>
         <p className="text-muted-foreground mt-1">
-          {existingLog ? 'Update your entry for this date' : 'Record your daily vitals'}
+          {existingLog ? t('updateEntryDesc') : t('recordDailyVitals')}
         </p>
       </motion.div>
 
@@ -105,7 +107,7 @@ export default function LogEntry() {
         {/* Date picker */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
           className="bg-card rounded-2xl border border-border p-6">
-          <Label className="text-xs uppercase tracking-wider text-muted-foreground">Date</Label>
+          <Label className="text-xs uppercase tracking-wider text-muted-foreground">{t('date')}</Label>
           <Input
             type="date"
             value={date}
@@ -117,7 +119,7 @@ export default function LogEntry() {
         {/* Heart Rate */}
         <MetricInput
           icon={Heart}
-          label="Resting Heart Rate"
+          label={t('restingHeartRate')}
           value={form.heart_rate_avg}
           onChange={(v) => updateField('heart_rate_avg', v)}
           min={30} max={120} step={1} unit="bpm"
@@ -128,7 +130,7 @@ export default function LogEntry() {
         {/* HRV */}
         <MetricInput
           icon={Activity}
-          label="Heart Rate Variability"
+          label={t('heartRateVariabilityFull')}
           value={form.hrv}
           onChange={(v) => updateField('hrv', v)}
           min={5} max={200} step={1} unit="ms"
@@ -139,7 +141,7 @@ export default function LogEntry() {
         {/* Sleep Duration */}
         <MetricInput
           icon={Moon}
-          label="Sleep Duration"
+          label={t('sleepDuration')}
           value={form.sleep_duration}
           onChange={(v) => updateField('sleep_duration', v)}
           min={0} max={14} step={0.5} unit="hours"
@@ -150,7 +152,7 @@ export default function LogEntry() {
         {/* Sleep Quality */}
         <MetricInput
           icon={Star}
-          label="Sleep Quality"
+          label={t('sleepQuality')}
           value={form.sleep_quality}
           onChange={(v) => updateField('sleep_quality', v)}
           min={1} max={10} step={1} unit="/ 10"
@@ -161,7 +163,7 @@ export default function LogEntry() {
         {/* Steps */}
         <MetricInput
           icon={Footprints}
-          label="Steps"
+          label={t('stepsLabel')}
           value={form.steps}
           onChange={(v) => updateField('steps', v)}
           min={0} max={50000} step={500} unit="steps"
@@ -172,7 +174,7 @@ export default function LogEntry() {
         {/* Workout Strain */}
         <MetricInput
           icon={Flame}
-          label="Workout Strain"
+          label={t('workoutStrain')}
           value={form.workout_strain}
           onChange={(v) => updateField('workout_strain', v)}
           min={0} max={21} step={0.5} unit="/ 21"
@@ -187,12 +189,12 @@ export default function LogEntry() {
             <div className="h-9 w-9 rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
               <FileText className="h-4 w-4" />
             </div>
-            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Notes</Label>
+            <Label className="text-xs uppercase tracking-wider text-muted-foreground">{t('notesLabel')}</Label>
           </div>
           <Textarea
             value={form.notes}
             onChange={(e) => updateField('notes', e.target.value)}
-            placeholder="How are you feeling today?"
+            placeholder={t('howAreYouFeeling')}
             className="resize-none h-24"
           />
         </motion.div>
@@ -206,11 +208,11 @@ export default function LogEntry() {
             disabled={saveMutation.isPending || saved}
           >
             {saveMutation.isPending ? (
-              <><Loader2 className="h-5 w-5 animate-spin" /> Saving...</>
+              <><Loader2 className="h-5 w-5 animate-spin" /> {t('savingDots')}</>
             ) : saved ? (
-              <><CheckCircle2 className="h-5 w-5" /> Saved!</>
+              <><CheckCircle2 className="h-5 w-5" /> {t('savedExcl')}</>
             ) : (
-              <><Save className="h-5 w-5" /> {existingLog ? 'Update Entry' : 'Save Entry'}</>
+              <><Save className="h-5 w-5" /> {existingLog ? t('updateEntry') : t('saveEntry')}</>
             )}
           </Button>
         </motion.div>

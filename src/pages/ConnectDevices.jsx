@@ -6,6 +6,7 @@ import { Plug, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import DeviceCard from '@/components/devices/DeviceCard';
 import SyncButton from '@/components/devices/SyncButton';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const DEVICES = [
   {
@@ -60,6 +61,7 @@ const DEVICES = [
 ];
 
 export default function ConnectDevices() {
+  const { t } = useLanguage();
   const [syncingIds, setSyncingIds] = useState(new Set());
   const [isSyncingAll, setIsSyncingAll] = useState(false);
   const [justSynced, setJustSynced] = useState(false);
@@ -95,7 +97,7 @@ export default function ConnectDevices() {
     onSuccess: (_, device) => {
       queryClient.invalidateQueries({ queryKey: ['deviceConnections'] });
       setUpdatingIds(prev => { const s = new Set(prev); s.delete(device.id); return s; });
-      toast.success(`${device.name} connected`);
+      toast.success(`${device.name} ${t('deviceConnected')}`);
     },
     onError: (_, device) => {
       setUpdatingIds(prev => { const s = new Set(prev); s.delete(device.id); return s; });
@@ -114,7 +116,7 @@ export default function ConnectDevices() {
       queryClient.invalidateQueries({ queryKey: ['deviceConnections'] });
       setUpdatingIds(prev => { const s = new Set(prev); s.delete(connection.device_id); return s; });
       const device = DEVICES.find(d => d.id === connection.device_id);
-      toast.success(`${device?.name ?? 'Device'} disconnected`);
+      toast.success(`${device?.name ?? 'Device'} ${t('deviceDisconnected')}`);
     },
     onError: (_, connection) => {
       setUpdatingIds(prev => { const s = new Set(prev); s.delete(connection.device_id); return s; });
@@ -143,7 +145,7 @@ export default function ConnectDevices() {
     setSyncingIds(new Set());
     setIsSyncingAll(false);
     setJustSynced(true);
-    toast.success(`Synced ${connected.length} device${connected.length > 1 ? 's' : ''}`);
+    toast.success(`${t('syncedDevices')} ${connected.length}`);
     setTimeout(() => setJustSynced(false), 3000);
   }, [connections, queryClient]);
 
@@ -158,9 +160,9 @@ export default function ConnectDevices() {
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-8 md:pt-0"
       >
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Connect Devices</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('connectDevicesTitle')}</h1>
           <p className="text-muted-foreground mt-1">
-            Link your wearables and health platforms to sync data automatically
+            {t('linkWearables')}
           </p>
         </div>
         <SyncButton
@@ -180,12 +182,12 @@ export default function ConnectDevices() {
       >
         <div className="text-center">
           <p className="text-2xl font-bold text-foreground">{connectedCount}</p>
-          <p className="text-xs text-muted-foreground">Connected</p>
+          <p className="text-xs text-muted-foreground">{t('connected')}</p>
         </div>
         <div className="h-8 w-px bg-border" />
         <div className="text-center">
           <p className="text-2xl font-bold text-foreground">{DEVICES.length - connectedCount}</p>
-          <p className="text-xs text-muted-foreground">Available</p>
+          <p className="text-xs text-muted-foreground">{t('available')}</p>
         </div>
         <div className="h-8 w-px bg-border" />
         <div className="flex items-center gap-2 flex-1">
@@ -198,7 +200,7 @@ export default function ConnectDevices() {
             />
           </div>
           <span className="text-xs text-muted-foreground whitespace-nowrap">
-            {Math.round((connectedCount / DEVICES.length) * 100)}% linked
+            {Math.round((connectedCount / DEVICES.length) * 100)}% {t('linked')}
           </span>
         </div>
       </motion.div>
@@ -212,8 +214,8 @@ export default function ConnectDevices() {
       >
         <Plug className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
         <p className="text-xs text-muted-foreground leading-relaxed">
-          <span className="text-foreground font-medium">OAuth integration coming soon.</span>{' '}
-          Connection status is saved to your account. Full real-time sync will be available when platform integrations launch.
+          <span className="text-foreground font-medium">{t('oauthComing')}</span>{' '}
+          {t('oauthDesc')}
         </p>
       </motion.div>
 

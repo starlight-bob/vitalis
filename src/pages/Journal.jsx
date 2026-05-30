@@ -11,14 +11,16 @@ import CorrelationCard from '@/components/journal/CorrelationCard';
 import CorrelationFilters from '@/components/journal/CorrelationFilters';
 import { calculateRecoveryScore } from '@/lib/healthUtils';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const TODAY = format(new Date(), 'yyyy-MM-dd');
-const TABS = [
-  { key: 'insights', label: 'Correlations', icon: FlaskConical },
-  { key: 'log', label: 'Journal Log', icon: ClipboardList },
-];
 
 export default function Journal() {
+  const { t } = useLanguage();
+  const TABS = [
+    { key: 'insights', label: t('correlations'), icon: FlaskConical },
+    { key: 'log', label: t('journalLog'), icon: ClipboardList },
+  ];
   const [tab, setTab] = useState('insights');
   const [filterMetric, setFilterMetric] = useState('all');
   const [showCheckin, setShowCheckin] = useState(false);
@@ -113,8 +115,8 @@ export default function Journal() {
       {/* Header */}
       <div className="flex items-start justify-between pt-12 md:pt-1">
         <div>
-          <h1 className="text-2xl font-black text-foreground tracking-tight">My Experiments</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Daily habits · Lifestyle correlations</p>
+          <h1 className="text-2xl font-black text-foreground tracking-tight">{t('journalTitle')}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">{t('journalSubtitle')}</p>
         </div>
         <Button
           onClick={() => setShowCheckin(true)}
@@ -124,7 +126,7 @@ export default function Journal() {
             todayEntry ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-primary hover:bg-primary/90'
           )}
         >
-          {todayEntry ? <><Sparkles className="h-3.5 w-3.5" /> Today ✓</> : <><PlusCircle className="h-3.5 w-3.5" /> Check In</>}
+          {todayEntry ? <><Sparkles className="h-3.5 w-3.5" /> {t('todayDone')}</> : <><PlusCircle className="h-3.5 w-3.5" /> {t('checkIn')}</>}
         </Button>
       </div>
 
@@ -138,8 +140,8 @@ export default function Journal() {
         >
           <span className="text-3xl">🌅</span>
           <div className="flex-1">
-            <p className="text-sm font-bold text-foreground">Morning check-in available</p>
-            <p className="text-xs text-muted-foreground">Takes ~60 seconds. Track your habits to unlock insights.</p>
+            <p className="text-sm font-bold text-foreground">{t('morningCheckin')}</p>
+            <p className="text-xs text-muted-foreground">{t('morningCheckinDesc')}</p>
           </div>
           <PlusCircle className="h-5 w-5 text-primary flex-shrink-0" />
         </motion.button>
@@ -169,10 +171,9 @@ export default function Journal() {
             <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
               <span className="text-5xl">🔬</span>
               <div>
-                <p className="text-base font-bold text-foreground">Not enough data yet</p>
+                <p className="text-base font-bold text-foreground">{t('notEnoughDataJournal')}</p>
                 <p className="text-sm text-muted-foreground max-w-xs mt-1">
-                  Complete at least <strong>3 daily check-ins</strong> to unlock lifestyle correlations.
-                  You have {entries.length} so far.
+                  {t('notEnoughDataJournalDesc')} <strong>3 {t('dailyCheckins')}</strong> {t('toUnlock')} {entries.length} {t('soFar')}
                 </p>
               </div>
               {/* Mini progress */}
@@ -182,9 +183,9 @@ export default function Journal() {
                   style={{ width: `${Math.min(100, (entries.length / 3) * 100)}%` }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground">{entries.length}/3 check-ins complete</p>
+              <p className="text-xs text-muted-foreground">{entries.length}/3 {t('checkinsComplete')}</p>
               <Button onClick={() => setShowCheckin(true)} className="gap-2">
-                <PlusCircle className="h-4 w-4" /> Start Today's Check-in
+                <PlusCircle className="h-4 w-4" /> {t('startCheckin')}
               </Button>
             </div>
           ) : (
@@ -193,14 +194,14 @@ export default function Journal() {
               {filteredCorrelations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
                   <span className="text-4xl">🔍</span>
-                  <p className="text-sm font-semibold text-foreground">No significant correlations found</p>
-                  <p className="text-xs text-muted-foreground">Try a different filter, or keep logging to find patterns.</p>
+                  <p className="text-sm font-semibold text-foreground">{t('noCorrelations')}</p>
+                  <p className="text-xs text-muted-foreground">{t('noCorrelationsDesc')}</p>
                 </div>
               ) : (
                 <>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 border border-border rounded-xl px-3 py-2 w-full overflow-hidden">
                     <Info className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="truncate">Ranked by correlation strength. Based on {entries.length} days of check-ins.</span>
+                    <span className="truncate">{t('rankedBy')} {entries.length} {t('daysCheckins')}</span>
                   </div>
                   <div className="space-y-3">
                     {filteredCorrelations.map((c, i) => (
@@ -220,8 +221,8 @@ export default function Journal() {
           {entries.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
               <span className="text-4xl">📓</span>
-              <p className="text-sm font-semibold text-foreground">No entries yet</p>
-              <p className="text-xs text-muted-foreground">Start your first daily check-in to see it here.</p>
+              <p className="text-sm font-semibold text-foreground">{t('noEntriesYet')}</p>
+              <p className="text-xs text-muted-foreground">{t('noEntriesDesc')}</p>
             </div>
           ) : (
             [...entries]
@@ -257,6 +258,7 @@ export default function Journal() {
 }
 
 function JournalLogRow({ entry, index, enabledKeys, onEdit, isToday }) {
+  const { t } = useLanguage();
   const activeQuestions = JOURNAL_QUESTIONS.filter(q => enabledKeys.includes(q.key));
   const filledCount = activeQuestions.filter(q => entry[q.key] != null).length;
 
@@ -270,12 +272,12 @@ function JournalLogRow({ entry, index, enabledKeys, onEdit, isToday }) {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-bold text-foreground">
-            {isToday ? '📅 Today' : format(new Date(entry.date + 'T00:00:00'), 'EEE, MMM d')}
+            {isToday ? t('today') : format(new Date(entry.date + 'T00:00:00'), 'EEE, MMM d')}
           </p>
-          <p className="text-[10px] text-muted-foreground">{filledCount}/{activeQuestions.length} questions answered</p>
+          <p className="text-[10px] text-muted-foreground">{filledCount}/{activeQuestions.length} {t('questionsAnswered')}</p>
         </div>
         {isToday && (
-          <button onClick={onEdit} className="text-xs text-primary font-semibold">Edit</button>
+          <button onClick={onEdit} className="text-xs text-primary font-semibold">{t('edit')}</button>
         )}
       </div>
       <div className="flex flex-wrap gap-1.5">

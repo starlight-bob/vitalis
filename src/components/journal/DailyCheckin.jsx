@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { JOURNAL_QUESTIONS, getEnabledQuestions } from '@/lib/correlationEngine';
 import { cn } from '@/lib/utils';
 import { format, subDays } from 'date-fns';
+import { useLanguage } from '@/lib/LanguageContext';
 
-function QuestionInput({ q, value, onChange }) {
+function QuestionInput({ q, value, onChange, t }) {
   if (q.type === 'boolean') {
     return (
       <div className="flex gap-2">
-        {[{ label: 'Yes', val: true }, { label: 'No', val: false }].map(opt => (
+        {[{ label: t ? t('yes') : 'Yes', val: true }, { label: t ? t('no') : 'No', val: false }].map(opt => (
           <button
             key={opt.label}
             onClick={() => onChange(opt.val)}
@@ -44,8 +45,8 @@ function QuestionInput({ q, value, onChange }) {
           className="w-full accent-primary"
         />
         <div className="flex justify-between text-[10px] text-muted-foreground">
-          <span>{q.key === 'stress_level' ? 'Relaxed' : 'Low'}</span>
-          <span>{q.key === 'stress_level' ? 'Overwhelmed' : 'High'}</span>
+          <span>{q.key === 'stress_level' ? (t ? t('relaxed') : 'Relaxed') : (t ? t('low') : 'Low')}</span>
+          <span>{q.key === 'stress_level' ? (t ? t('overwhelmed') : 'Overwhelmed') : (t ? t('high') : 'High')}</span>
         </div>
       </div>
     );
@@ -69,6 +70,7 @@ function QuestionInput({ q, value, onChange }) {
 }
 
 export default function DailyCheckin({ onSave, onClose, settings, existingEntry, initialDate }) {
+  const { t } = useLanguage();
   const enabledKeys = getEnabledQuestions(settings);
   const activeQuestions = JOURNAL_QUESTIONS.filter(q => enabledKeys.includes(q.key));
 
@@ -128,12 +130,12 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
           onClick={e => e.stopPropagation()}
         >
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-base font-bold text-foreground">Customise Questions</h2>
+            <h2 className="text-base font-bold text-foreground">{t('customiseQuestions')}</h2>
             <button onClick={() => setShowSettings(false)} className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
               <X className="h-4 w-4" />
             </button>
           </div>
-          <p className="text-xs text-muted-foreground">Choose which habits you want to track daily.</p>
+          <p className="text-xs text-muted-foreground">{t('chooseHabits')}</p>
           <div className="space-y-2">
             {JOURNAL_QUESTIONS.map(q => (
               <button
@@ -161,7 +163,7 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
               onSave({ __settings: Array.from(pendingEnabled) });
             }}
           >
-            Save Preferences
+            {t('savePreferences')}
           </Button>
         </motion.div>
       </div>
@@ -179,8 +181,8 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Daily Check-in</p>
-            <h2 className="text-base font-bold text-foreground mt-0.5">{step + 1} of {activeQuestions.length}</h2>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">{t('dailyCheckinTitle')}</p>
+            <h2 className="text-base font-bold text-foreground mt-0.5">{step + 1} {t('of')} {activeQuestions.length}</h2>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setShowSettings(true)} className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
@@ -201,14 +203,14 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
               'flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all',
               selectedDate === today ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
             )}
-          >Today</button>
+          >{t('today').replace('📅 ', '')}</button>
           <button
             onClick={() => setSelectedDate(yesterday)}
             className={cn(
               'flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all',
               selectedDate === yesterday ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
             )}
-          >Yesterday</button>
+          >{t('yesterday') || 'Yesterday'}</button>
           <div className="flex-1 relative">
             <input
               type="date"
@@ -256,6 +258,7 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
                 q={current}
                 value={answers[current.key]}
                 onChange={val => setAnswers(prev => ({ ...prev, [current.key]: val }))}
+                t={t}
               />
             </motion.div>
           </AnimatePresence>
@@ -264,11 +267,11 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
         {/* Actions */}
         <div className="flex gap-2">
           {step > 0 && (
-            <Button variant="outline" onClick={handleBack} className="flex-1">Back</Button>
+            <Button variant="outline" onClick={handleBack} className="flex-1">{t('back')}</Button>
           )}
-          <Button variant="ghost" onClick={handleSkip} className="text-muted-foreground text-sm">Skip</Button>
+          <Button variant="ghost" onClick={handleSkip} className="text-muted-foreground text-sm">{t('skip')}</Button>
           <Button onClick={handleNext} className="flex-1 gap-1">
-            {isLast ? 'Save Check-in' : 'Next'}
+            {isLast ? t('saveCheckin') : t('next')}
             {!isLast && <ChevronRight className="h-4 w-4" />}
           </Button>
         </div>

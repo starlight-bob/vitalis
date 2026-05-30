@@ -105,7 +105,7 @@ export default function BiologicalAge() {
       >
         <Info className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Biological age estimates are based on your logged health metrics (HRV, sleep, activity, recovery). These are statistical approximations and are <strong className="text-foreground">not a medical diagnosis</strong>. Consult a healthcare professional for clinical assessment. Chronological age is set to {CHRONO_AGE} — update in your profile for personalized results.
+          {t('bioAgeDisclaimer')} <strong className="text-foreground">{t('notMedDiagnosis')}</strong>{t('bioAgeDisclaimerEnd')} {CHRONO_AGE} {t('updateInProfile')}
         </p>
       </motion.div>
     </div>

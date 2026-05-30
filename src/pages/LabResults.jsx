@@ -9,15 +9,24 @@ import { Input } from '@/components/ui/input';
 import LabTimelineItem from '@/components/labs/LabTimelineItem';
 import LabUploadForm from '@/components/labs/LabUploadForm';
 import LabDetailModal from '@/components/labs/LabDetailModal';
-
-const CATEGORIES = ['All', 'Blood Work', 'Imaging', 'Urine', 'Hormone Panel', 'Other'];
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function LabResults() {
+  const { t } = useLanguage();
+  const CATEGORIES = [
+    { key: 'All', label: t('catAll') },
+    { key: 'Blood Work', label: t('catBloodWork') },
+    { key: 'Imaging', label: t('catImaging') },
+    { key: 'Urine', label: t('catUrine') },
+    { key: 'Hormone Panel', label: t('catHormone') },
+    { key: 'Other', label: t('catOther') },
+  ];
   const [showForm, setShowForm] = useState(false);
   const [editingResult, setEditingResult] = useState(null);
   const [selectedResult, setSelectedResult] = useState(null);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+
 
   const { data: rawResults, isLoading } = useQuery({
     queryKey: ['labResults'],
@@ -29,6 +38,7 @@ export default function LabResults() {
   const filtered = useMemo(() => {
     return results
       .filter(r => activeCategory === 'All' || r.category === activeCategory)
+
       .filter(r => {
         if (!search.trim()) return true;
         const q = search.toLowerCase();
@@ -55,11 +65,11 @@ export default function LabResults() {
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-8 md:pt-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Lab Results</h1>
-          <p className="text-muted-foreground mt-1">Your medical records, documents, and test results</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('labResultsTitle')}</h1>
+          <p className="text-muted-foreground mt-1">{t('labResultsDesc')}</p>
         </div>
         <Button onClick={() => { setEditingResult(null); setShowForm(true); }} className="gap-2 flex-shrink-0">
-          <Plus className="h-4 w-4" /> Add Record
+          <Plus className="h-4 w-4" /> {t('addRecord')}
         </Button>
       </motion.div>
 
@@ -71,7 +81,7 @@ export default function LabResults() {
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search records, notes, categories…"
+            placeholder={t('searchRecords')}
             className="pl-10 bg-card border-border"
           />
         </div>
@@ -80,15 +90,15 @@ export default function LabResults() {
           <SlidersHorizontal className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
           {CATEGORIES.map(cat => (
             <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
+              key={cat.key}
+              onClick={() => setActiveCategory(cat.key)}
               className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-200 font-medium ${
-                activeCategory === cat
+                activeCategory === cat.key
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20'
                   : 'bg-card text-muted-foreground border-border hover:border-primary/30 hover:text-foreground'
               }`}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>
@@ -98,16 +108,18 @@ export default function LabResults() {
       {results.length > 0 && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {['Blood Work', 'Imaging', 'Hormone Panel', 'Other'].map(cat => {
-            const count = results.filter(r => r.category === cat || (cat === 'Other' && ['Urine', 'Other'].includes(r.category))).length;
-            return (
-              <button key={cat} onClick={() => setActiveCategory(cat === 'Other' ? 'All' : cat)}
-                className="bg-card border border-border rounded-xl p-3 text-left hover:border-primary/30 transition-all">
-                <p className="text-xl font-bold text-foreground">{results.filter(r => r.category === cat).length}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{cat}</p>
-              </button>
-            );
-          })}
+          {[
+            { key: 'Blood Work', label: t('catBloodWork') },
+            { key: 'Imaging', label: t('catImaging') },
+            { key: 'Hormone Panel', label: t('catHormone') },
+            { key: 'Other', label: t('catOther') },
+          ].map(cat => (
+            <button key={cat.key} onClick={() => setActiveCategory(cat.key === 'Other' ? 'All' : cat.key)}
+              className="bg-card border border-border rounded-xl p-3 text-left hover:border-primary/30 transition-all">
+              <p className="text-xl font-bold text-foreground">{results.filter(r => r.category === cat.key).length}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{cat.label}</p>
+            </button>
+          ))}
         </motion.div>
       )}
 
@@ -123,16 +135,14 @@ export default function LabResults() {
             <FlaskConical className="h-8 w-8 text-muted-foreground" />
           </div>
           <h3 className="text-base font-semibold text-foreground mb-1">
-            {results.length === 0 ? 'No records yet' : 'No matches found'}
+            {results.length === 0 ? t('noRecordsYet') : t('noMatchesFound')}
           </h3>
           <p className="text-sm text-muted-foreground text-center max-w-xs mb-5">
-            {results.length === 0
-              ? 'Upload your first lab result, scan, or medical document to get started.'
-              : 'Try adjusting your search or filter.'}
+            {results.length === 0 ? t('uploadFirstLab') : t('tryAdjusting')}
           </p>
           {results.length === 0 && (
             <Button onClick={() => setShowForm(true)} className="gap-2">
-              <Plus className="h-4 w-4" /> Add First Record
+              <Plus className="h-4 w-4" /> {t('addFirstRecord')}
             </Button>
           )}
         </motion.div>
@@ -144,7 +154,7 @@ export default function LabResults() {
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{year}</span>
                 <div className="flex-1 h-px bg-border" />
-                <span className="text-xs text-muted-foreground">{items.length} record{items.length !== 1 ? 's' : ''}</span>
+                <span className="text-xs text-muted-foreground">{items.length} {t('records')}</span>
               </div>
               {/* Timeline items */}
               <div>

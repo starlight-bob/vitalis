@@ -8,19 +8,21 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { calculateRecoveryScore, formatDateShort } from '@/lib/healthUtils';
 import TrendChart from '@/components/trends/TrendChart';
 import PullToRefresh from '@/components/layout/PullToRefresh';
-
-const CHART_CONFIGS = [
-  { key: 'recovery', name: 'Recovery Score', color: '#22c55e', unit: '' },
-  { key: 'hrv', name: 'HRV', color: '#3b82f6', unit: 'ms' },
-  { key: 'heart_rate_avg', name: 'Resting Heart Rate', color: '#ef4444', unit: 'bpm' },
-  { key: 'sleep_duration', name: 'Sleep Duration', color: '#818cf8', unit: 'hrs' },
-  { key: 'sleep_quality', name: 'Sleep Quality', color: '#eab308', unit: '/10' },
-  { key: 'steps', name: 'Steps', color: '#10b981', unit: '' },
-  { key: 'workout_strain', name: 'Workout Strain', color: '#f97316', unit: '/21' },
-];
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Trends() {
   const [days, setDays] = useState(7);
+  const { t } = useLanguage();
+
+  const CHART_CONFIGS = [
+    { key: 'recovery', name: t('trendRecovery'), color: '#22c55e', unit: '' },
+    { key: 'hrv', name: t('trendHrv'), color: '#3b82f6', unit: 'ms' },
+    { key: 'heart_rate_avg', name: t('trendHeartRate'), color: '#ef4444', unit: 'bpm' },
+    { key: 'sleep_duration', name: t('trendSleepDuration'), color: '#818cf8', unit: 'hrs' },
+    { key: 'sleep_quality', name: t('trendSleepQuality'), color: '#eab308', unit: '/10' },
+    { key: 'steps', name: t('trendSteps'), color: '#10b981', unit: '' },
+    { key: 'workout_strain', name: t('trendStrain'), color: '#f97316', unit: '/21' },
+  ];
 
   const { data: allLogs = [], isLoading } = useQuery({
     queryKey: ['healthLogs', 'all'],
@@ -61,21 +63,21 @@ export default function Trends() {
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-8 md:pt-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Trends</h1>
-          <p className="text-muted-foreground mt-1">Track your health metrics over time</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('trendsTitle')}</h1>
+          <p className="text-muted-foreground mt-1">{t('trackOverTime')}</p>
         </div>
         <Tabs value={String(days)} onValueChange={(v) => setDays(Number(v))}>
           <TabsList>
-            <TabsTrigger value="7">7 Days</TabsTrigger>
-            <TabsTrigger value="30">30 Days</TabsTrigger>
+            <TabsTrigger value="7">{t('days7')}</TabsTrigger>
+            <TabsTrigger value="30">{t('days30')}</TabsTrigger>
           </TabsList>
         </Tabs>
       </motion.div>
 
       {chartData.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-border">
-          <p className="text-muted-foreground">No data available for the selected period</p>
-          <p className="text-xs text-muted-foreground mt-2">Start logging your health metrics to see trends</p>
+          <p className="text-muted-foreground">{t('noDataPeriod')}</p>
+          <p className="text-xs text-muted-foreground mt-2">{t('startLogging')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -93,7 +95,7 @@ export default function Trends() {
                 </h3>
                 {chartData.length > 0 && (
                   <span className="text-xs text-muted-foreground">
-                    Avg: {Math.round(chartData.reduce((sum, d) => sum + (d[config.key] || 0), 0) / chartData.length)}
+                    {t('avg')}: {Math.round(chartData.reduce((sum, d) => sum + (d[config.key] || 0), 0) / chartData.length)}
                     {config.unit}
                   </span>
                 )}

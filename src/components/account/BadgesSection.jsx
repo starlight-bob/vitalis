@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion';
 import { Lock } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function BadgesSection({ badges }) {
+  const { t } = useLanguage();
   const safeBadges = Array.isArray(badges) ? badges : [];
   return (
     <div className="px-4">
-      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Achievements</h3>
+      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">{t('achievements')}</h3>
       <div className="grid grid-cols-2 gap-3">
         {safeBadges.map((badge, i) => (
           <motion.div
@@ -40,7 +42,7 @@ export default function BadgesSection({ badges }) {
               </div>
             )}
             {badge.earned && (
-              <p className="text-[9px] text-primary font-medium">Earned</p>
+              <p className="text-[9px] text-primary font-medium">{t('earned')}</p>
             )}
           </motion.div>
         ))}
