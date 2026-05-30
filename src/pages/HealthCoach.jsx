@@ -133,19 +133,19 @@ Coach:`;
   // Height: full viewport minus top nav (desktop sidebar offset handled by layout)
   // On mobile we subtract the bottom nav (~64px) + safe area
   return (
-    <div className="flex flex-col -mx-4 sm:-mx-6 lg:-mx-8 bg-background"
-      style={{ height: 'calc(100dvh - 5rem)', maxHeight: 900, marginTop: 32 }}
+    <div
+      className="flex flex-col -mx-4 sm:-mx-6 lg:-mx-8 bg-background overflow-hidden"
+      style={{ height: 'calc(100dvh - 5rem)', marginTop: 32 }}
     >
-      {/* Inner container */}
-      <div className="flex flex-col flex-1 overflow-hidden max-w-3xl mx-auto w-full pt-4 md:pt-6">
-        <div className="px-4 sm:px-6">
+      <div className="flex flex-col h-full max-w-3xl mx-auto w-full">
+
+        {/* Fixed header */}
+        <div className="flex-shrink-0 px-4 sm:px-6 pt-4 md:pt-6 pb-2">
           <CoachHeader logsCount={logs.length} labCount={labResults.length} />
         </div>
 
-        {/* Scrollable messages — padded so last message clears the floating input bar */}
-        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-2 space-y-2 scrollbar-thin"
-          style={{ paddingBottom: showSuggestions ? 220 : 100 }}
-        >
+        {/* Scrollable messages only */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-2 space-y-2">
           {messages.map((msg, i) => (
             <ChatMessage key={i} message={msg} index={i} />
           ))}
@@ -153,15 +153,10 @@ Coach:`;
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Floating input container — pinned above bottom nav */}
+        {/* Fixed bottom: suggestions + input */}
         <div
-          className="flex-shrink-0 px-4 sm:px-6 pt-3 pb-3 space-y-2 border-t border-border/40"
-          style={{
-            paddingBottom: 'calc(12px + env(safe-area-inset-bottom))',
-            background: 'rgba(var(--background) / 0.7)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-          }}
+          className="flex-shrink-0 px-4 sm:px-6 pt-3 space-y-2 border-t border-border/40 bg-background"
+          style={{ paddingBottom: 'calc(12px + env(safe-area-inset-bottom))' }}
         >
           {showSuggestions && (
             <SuggestedPrompts onSelect={sendMessage} disabled={isLoading} />
@@ -176,7 +171,7 @@ Coach:`;
               placeholder="Ask your Health Coach anything…"
               rows={1}
               className={cn(
-                "resize-none flex-1 bg-card/80 border-border/50 rounded-xl text-sm placeholder:text-muted-foreground",
+                "resize-none flex-1 bg-card border-border/50 rounded-xl text-sm placeholder:text-muted-foreground",
                 "focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/30",
                 "min-h-[44px] max-h-[120px] py-3 px-4 transition-all"
               )}
@@ -195,7 +190,7 @@ Coach:`;
               )}
             </Button>
           </div>
-          <p className="text-[10px] text-muted-foreground text-center">
+          <p className="text-[10px] text-muted-foreground text-center pb-1">
             Uses advanced AI · responses based on your logged health data
           </p>
         </div>
