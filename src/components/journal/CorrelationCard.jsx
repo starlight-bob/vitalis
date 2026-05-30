@@ -24,15 +24,13 @@ export default function CorrelationCard({ correlation, index }) {
     if (pctDiff != null && Math.abs(pctDiff) >= 5) {
       const dir = pctDiff > 0 ? t('higher') : t('lower');
       const absP = Math.abs(pctDiff);
-      // EN: "On days with more X, your Y was N% higher."
-      // ZH: "在X较多的日子，您的Y高N%。"
       return lang === 'zh'
-        ? `在${journalLabel}较多的日子，您的${healthLabel}${dir}${absP}%。`
-        : `On days with more ${journalLabel.toLowerCase()}, your ${healthLabel} was ${absP}% ${dir}.`;
+        ? `在${jLabel}较多的日子，您的${hLabel}${dir}${absP}%。`
+        : `On days with more ${jLabel.toLowerCase()}, your ${hLabel} was ${absP}% ${dir}.`;
     }
     return lang === 'zh'
-      ? `${journalLabel}与您的${healthLabel}${positive ? '正' : '负'}相关。`
-      : `${journalLabel} ${positive ? 'positively' : 'negatively'} correlates with your ${healthLabel}.`;
+      ? `${jLabel}与您的${hLabel}${positive ? '正' : '负'}相关。`
+      : `${jLabel} ${positive ? 'positively' : 'negatively'} correlates with your ${hLabel}.`;
   })();
 
   const scatterData = series.map(s => ({ x: s.jVal, y: s.hVal }));
