@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Watch, RefreshCw, Trash2, Plus, ChevronLeft, CheckCircle2, XCircle, Clock, ChevronDown, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { zhCN } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import {
@@ -12,26 +13,10 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-
-const FREQ_OPTIONS = [
-  { value: '5min',  label: 'Every 5 min' },
-  { value: '15min', label: 'Every 15 min' },
-  { value: '30min', label: 'Every 30 min' },
-  { value: '1hr',   label: 'Every hour' },
-];
+import { useLanguage } from '@/lib/LanguageContext';
 
 const MOCK_BATTERY = 72;
 const MOCK_FIRMWARE = 'v4.12.1';
-
-const ADD_DEVICES = [
-  { id: 'apple_watch', name: 'Apple Watch', icon: '⌚', sub: 'Series 4 and later' },
-  { id: 'garmin', name: 'Garmin', icon: '🟡', sub: 'All models via Connect IQ' },
-  { id: 'fitbit', name: 'Fitbit', icon: '📟', sub: 'Charge, Sense, Versa' },
-  { id: 'oura', name: 'Oura Ring', icon: '💍', sub: 'Gen 2 & Gen 3' },
-  { id: 'whoop', name: 'WHOOP', icon: '💪', sub: 'WHOOP 4.0 & 5.0' },
-  { id: 'samsung', name: 'Galaxy Watch', icon: '🔵', sub: 'Galaxy Watch 4+' },
-  { id: 'manual', name: 'Manual Entry', icon: '✏️', sub: 'Log data manually' },
-];
 
 function getBatteryColor(pct) {
   if (pct >= 75) return 'bg-emerald-500';
@@ -64,6 +49,7 @@ const MOCK_SYNC_LOG = [
 ];
 
 export default function DeviceSettings() {
+  const { t, lang } = useLanguage();
   const [syncing, setSyncing] = useState(false);
   const [autoSync, setAutoSync] = useState(true);
   const [bgSync, setBgSync] = useState(true);
@@ -72,6 +58,25 @@ export default function DeviceSettings() {
   const [freqSheetOpen, setFreqSheetOpen] = useState(false);
   const [removeTarget, setRemoveTarget] = useState(null);
   const queryClient = useQueryClient();
+
+  const FREQ_OPTIONS = [
+    { value: '5min',  label: t('freq5min') },
+    { value: '15min', label: t('freq15min') },
+    { value: '30min', label: t('freq30min') },
+    { value: '1hr',   label: t('freq1hr') },
+  ];
+
+  const ADD_DEVICES = [
+    { id: 'apple_watch', name: 'Apple Watch', icon: '⌚', sub: t('appleWatchSub') },
+    { id: 'garmin', name: 'Garmin', icon: '🟡', sub: t('garminSub') },
+    { id: 'fitbit', name: 'Fitbit', icon: '📟', sub: t('fitbitSub') },
+    { id: 'oura', name: 'Oura Ring', icon: '💍', sub: t('ouraSub') },
+    { id: 'whoop', name: 'WHOOP', icon: '💪', sub: t('whoopSub') },
+    { id: 'samsung', name: 'Galaxy Watch', icon: '🔵', sub: t('samsungSub') },
+    { id: 'manual', name: t('manualEntry'), icon: '✏️', sub: t('manualSub') },
+  ];
+
+  const dateLocale = lang === 'zh' ? zhCN : undefined;
 
   const { data: rawConnections, isLoading: connectionsLoading, isError: connectionsError } = useQuery({
     queryKey: ['deviceConnections'],
@@ -99,7 +104,7 @@ export default function DeviceSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deviceConnections'] });
-      toast.success('Device removed');
+      toast.success(t('deviceRemoved'));
     },
   });
 
@@ -111,11 +116,11 @@ export default function DeviceSettings() {
       queryClient.invalidateQueries({ queryKey: ['deviceConnections'] });
     }
     setSyncing(false);
-    toast.success('Sync complete');
+    toast.success(t('syncComplete'));
   };
 
   const handleAdd = (device) => {
-    toast.info(`${device.name} — OAuth pairing coming soon`);
+    toast.info(`${device.name} — ${t('oauthComing')}`);
   };
 
   if (connectionsLoading) {
@@ -130,8 +135,8 @@ export default function DeviceSettings() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-3 px-8">
         <Watch className="h-10 w-10 text-muted-foreground" />
-        <p className="text-base font-semibold text-foreground">Couldn't load devices</p>
-        <p className="text-sm text-muted-foreground text-center">Please check your connection and try again.</p>
+        <p className="text-base font-semibold text-foreground">{t('couldntLoadDevices')}</p>
+        <p className="text-sm text-muted-foreground text-center">{t('checkConnection')}</p>
       </div>
     );
   }
@@ -143,7 +148,7 @@ export default function DeviceSettings() {
         <Link to="/" className="h-8 w-8 rounded-full bg-muted flex items-center justify-center hover:bg-accent transition-colors">
           <ChevronLeft className="h-4 w-4 text-muted-foreground" />
         </Link>
-        <h1 className="text-base font-semibold tracking-tight text-foreground">Device Settings</h1>
+        <h1 className="text-base font-semibold tracking-tight text-foreground">{t('deviceSettingsTitle')}</h1>
       </div>
 
       <div className="px-4 py-6 space-y-6">
@@ -161,7 +166,7 @@ export default function DeviceSettings() {
                   <p className="font-semibold text-sm text-foreground">{primary.device_name}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] text-emerald-600">Connected</span>
+                    <span className="text-[11px] text-emerald-600">{t('connected')}</span>
                   </div>
                 </div>
               </div>
@@ -171,14 +176,14 @@ export default function DeviceSettings() {
                 className="flex items-center gap-1.5 text-[11px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-3 py-1.5 rounded-lg hover:bg-emerald-100 transition-colors disabled:opacity-50"
               >
                 <RefreshCw className={`h-3 w-3 ${syncing ? 'animate-spin' : ''}`} />
-                {syncing ? 'Syncing…' : 'Sync Now'}
+                {syncing ? t('syncing') : t('syncNow')}
               </button>
             </div>
 
             {/* Battery bar */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] text-slate-400">Battery</span>
+                <span className="text-[11px] text-slate-400">{t('battery')}</span>
                 <span className="text-[11px] text-slate-600 font-medium">{MOCK_BATTERY}%</span>
               </div>
               <div className="h-1.5 bg-muted rounded-full overflow-hidden">
@@ -193,15 +198,15 @@ export default function DeviceSettings() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-muted border border-border rounded-xl p-3">
-                <p className="text-[10px] text-muted-foreground mb-0.5">Firmware</p>
+                <p className="text-[10px] text-muted-foreground mb-0.5">{t('firmware')}</p>
                 <p className="text-xs font-medium text-foreground">{MOCK_FIRMWARE}</p>
               </div>
               <div className="bg-muted border border-border rounded-xl p-3">
-                <p className="text-[10px] text-muted-foreground mb-0.5">Last Sync</p>
+                <p className="text-[10px] text-muted-foreground mb-0.5">{t('lastSynced')}</p>
                 <p className="text-xs font-medium text-foreground">
                   {primary.last_sync
-                    ? formatDistanceToNow(new Date(primary.last_sync), { addSuffix: true })
-                    : 'Never'}
+                    ? formatDistanceToNow(new Date(primary.last_sync), { addSuffix: true, locale: dateLocale })
+                    : t('neverSynced')}
                 </p>
               </div>
             </div>
@@ -209,14 +214,14 @@ export default function DeviceSettings() {
         ) : (
           <div className="bg-card border border-border rounded-2xl p-5 text-center">
             <Watch className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">No device connected</p>
+            <p className="text-sm text-muted-foreground">{t('noDeviceConnected')}</p>
           </div>
         )}
 
         {/* My Devices */}
         {connections.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">My Devices</p>
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">{t('myDevices')}</p>
             <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
               {connections.map((conn) => (
                 <div key={conn.id} className="flex items-center justify-between px-4 py-3.5">
@@ -224,7 +229,7 @@ export default function DeviceSettings() {
                     <span className={`h-2 w-2 rounded-full ${conn.connected ? 'bg-emerald-400' : 'bg-muted-foreground'}`} />
                     <div>
                       <p className="text-sm font-medium text-foreground">{conn.device_name}</p>
-                      <p className="text-[10px] text-muted-foreground">{conn.connected ? 'Active' : 'Disconnected'}</p>
+                      <p className="text-[10px] text-muted-foreground">{conn.connected ? t('active') : t('deviceDisconnected')}</p>
                     </div>
                   </div>
                   <button
@@ -241,7 +246,7 @@ export default function DeviceSettings() {
 
         {/* Add New Device */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">Add New Device</p>
+          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">{t('addNewDevice')}</p>
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {ADD_DEVICES.map((d) => (
               <button
@@ -264,12 +269,12 @@ export default function DeviceSettings() {
 
         {/* Sync Settings */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">Sync Settings</p>
+          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">{t('syncSettings')}</p>
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {[
-              { label: 'Auto-Sync', sub: 'Automatically sync when in range', val: autoSync, set: setAutoSync },
-              { label: 'Background Sync', sub: 'Sync while app is in background', val: bgSync, set: setBgSync },
-              { label: 'Wi-Fi Only', sub: 'Only sync on Wi-Fi connections', val: wifiOnly, set: setWifiOnly },
+              { label: t('autoSync'), sub: t('autoSyncDesc'), val: autoSync, set: setAutoSync },
+              { label: t('backgroundSync'), sub: t('backgroundSyncDesc'), val: bgSync, set: setBgSync },
+              { label: t('wifiOnly'), sub: t('wifiOnlyDesc'), val: wifiOnly, set: setWifiOnly },
             ].map(({ label, sub, val, set }) => (
               <div key={label} className="flex items-center justify-between px-4 py-3.5">
                 <div>
@@ -283,8 +288,8 @@ export default function DeviceSettings() {
             {/* Sync Frequency */}
             <div className="flex items-center justify-between px-4 py-3.5">
               <div>
-                <p className="text-sm font-medium text-foreground">Sync Frequency</p>
-                <p className="text-[10px] text-muted-foreground">How often to check for new data</p>
+                <p className="text-sm font-medium text-foreground">{t('syncFrequency')}</p>
+                <p className="text-[10px] text-muted-foreground">{t('syncFrequencyDesc')}</p>
               </div>
               <button
                 onClick={() => setFreqSheetOpen(true)}
@@ -299,7 +304,7 @@ export default function DeviceSettings() {
 
         {/* Sync Log */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">Sync Log</p>
+          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">{t('syncLog')}</p>
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {MOCK_SYNC_LOG.map((entry) => (
               <div key={entry.id} className="flex items-center gap-3 px-4 py-3">
@@ -308,11 +313,11 @@ export default function DeviceSettings() {
                   : <XCircle className="h-3.5 w-3.5 text-destructive flex-shrink-0" />}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-foreground truncate">{entry.device}</p>
-                  <p className="text-[10px] text-muted-foreground">{entry.status === 'success' ? 'Sync successful' : 'Sync failed'}</p>
+                  <p className="text-[10px] text-muted-foreground">{entry.status === 'success' ? t('syncSuccessful') : t('syncFailed')}</p>
                 </div>
                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground flex-shrink-0">
                   <Clock className="h-3 w-3" />
-                  {formatDistanceToNow(entry.time, { addSuffix: true })}
+                  {formatDistanceToNow(entry.time, { addSuffix: true, locale: dateLocale })}
                 </div>
               </div>
             ))}
@@ -325,7 +330,7 @@ export default function DeviceSettings() {
       <Sheet open={freqSheetOpen} onOpenChange={setFreqSheetOpen}>
         <SheetContent side="bottom" className="rounded-t-2xl safe-bottom">
           <SheetHeader className="mb-4">
-            <SheetTitle>Sync Frequency</SheetTitle>
+            <SheetTitle>{t('syncFrequency')}</SheetTitle>
           </SheetHeader>
           <div className="space-y-1 pb-2">
             {FREQ_OPTIONS.map(opt => (
@@ -347,18 +352,18 @@ export default function DeviceSettings() {
       <AlertDialog open={!!removeTarget} onOpenChange={open => !open && setRemoveTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove Device?</AlertDialogTitle>
+            <AlertDialogTitle>{t('removeDevice')}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will disconnect <strong>{removeTarget?.device_name}</strong>. You can reconnect it at any time.
+              {t('removeDeviceDesc1')} <strong>{removeTarget?.device_name}</strong>. {t('removeDeviceDesc2')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setRemoveTarget(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setRemoveTarget(null)}>{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => { removeMutation.mutate(removeTarget); setRemoveTarget(null); }}
             >
-              Remove
+              {t('remove')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

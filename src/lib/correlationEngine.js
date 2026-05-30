@@ -4,17 +4,17 @@ import { calculateRecoveryScore } from './healthUtils';
  * All trackable journal questions with metadata
  */
 export const JOURNAL_QUESTIONS = [
-  { key: 'sunlight_minutes', label: 'Sunlight Exposure', emoji: '☀️', unit: 'min', type: 'number', placeholder: '30', description: 'Minutes outside in natural light' },
-  { key: 'water_ml', label: 'Water Intake', emoji: '💧', unit: 'ml', type: 'number', placeholder: '2000', description: 'Total water consumed (ml)' },
-  { key: 'alcohol_units', label: 'Alcohol', emoji: '🍷', unit: 'units', type: 'number', placeholder: '0', description: 'Standard drinks consumed' },
-  { key: 'stress_level', label: 'Stress Level', emoji: '🧠', unit: '/10', type: 'slider', min: 1, max: 10, description: 'Overall stress today' },
-  { key: 'exercise_minutes', label: 'Exercise', emoji: '🏃', unit: 'min', type: 'number', placeholder: '45', description: 'Intentional exercise minutes' },
-  { key: 'screen_time_before_bed', label: 'Screen Before Bed', emoji: '📱', unit: 'min', type: 'number', placeholder: '30', description: 'Screen time in the hour before sleep' },
-  { key: 'caffeine_mg', label: 'Caffeine', emoji: '☕', unit: 'mg', type: 'number', placeholder: '200', description: 'Total caffeine intake (mg)' },
-  { key: 'last_caffeine_hour', label: 'Last Caffeine Time', emoji: '⏰', unit: 'hr', type: 'number', placeholder: '14', description: 'Hour of last caffeine (0–23)' },
-  { key: 'meditation_minutes', label: 'Meditation', emoji: '🧘', unit: 'min', type: 'number', placeholder: '10', description: 'Meditation or breathing time' },
-  { key: 'cold_exposure', label: 'Cold Exposure', emoji: '🧊', type: 'boolean', description: 'Cold shower or ice bath' },
-  { key: 'mood', label: 'Mood', emoji: '😊', unit: '/10', type: 'slider', min: 1, max: 10, description: 'Overall mood today' },
+  { key: 'sunlight_minutes', labelKey: 'jqSunlight', label: 'Sunlight Exposure', emoji: '☀️', unit: 'min', type: 'number', placeholder: '30', descKey: 'jqSunlightDesc', description: 'Minutes outside in natural light' },
+  { key: 'water_ml', labelKey: 'jqWater', label: 'Water Intake', emoji: '💧', unit: 'ml', type: 'number', placeholder: '2000', descKey: 'jqWaterDesc', description: 'Total water consumed (ml)' },
+  { key: 'alcohol_units', labelKey: 'jqAlcohol', label: 'Alcohol', emoji: '🍷', unit: 'units', type: 'number', placeholder: '0', descKey: 'jqAlcoholDesc', description: 'Standard drinks consumed' },
+  { key: 'stress_level', labelKey: 'jqStress', label: 'Stress Level', emoji: '🧠', unit: '/10', type: 'slider', min: 1, max: 10, descKey: 'jqStressDesc', description: 'Overall stress today' },
+  { key: 'exercise_minutes', labelKey: 'jqExercise', label: 'Exercise', emoji: '🏃', unit: 'min', type: 'number', placeholder: '45', descKey: 'jqExerciseDesc', description: 'Intentional exercise minutes' },
+  { key: 'screen_time_before_bed', labelKey: 'jqScreen', label: 'Screen Before Bed', emoji: '📱', unit: 'min', type: 'number', placeholder: '30', descKey: 'jqScreenDesc', description: 'Screen time in the hour before sleep' },
+  { key: 'caffeine_mg', labelKey: 'jqCaffeine', label: 'Caffeine', emoji: '☕', unit: 'mg', type: 'number', placeholder: '200', descKey: 'jqCaffeineDesc', description: 'Total caffeine intake (mg)' },
+  { key: 'last_caffeine_hour', labelKey: 'jqLastCaffeine', label: 'Last Caffeine Time', emoji: '⏰', unit: 'hr', type: 'number', placeholder: '14', descKey: 'jqLastCaffeineDesc', description: 'Hour of last caffeine (0–23)' },
+  { key: 'meditation_minutes', labelKey: 'jqMeditation', label: 'Meditation', emoji: '🧘', unit: 'min', type: 'number', placeholder: '10', descKey: 'jqMeditationDesc', description: 'Meditation or breathing time' },
+  { key: 'cold_exposure', labelKey: 'jqCold', label: 'Cold Exposure', emoji: '🧊', type: 'boolean', descKey: 'jqColdDesc', description: 'Cold shower or ice bath' },
+  { key: 'mood', labelKey: 'jqMood', label: 'Mood', emoji: '😊', unit: '/10', type: 'slider', min: 1, max: 10, descKey: 'jqMoodDesc', description: 'Overall mood today' },
 ];
 
 const DEFAULT_ENABLED = [
@@ -32,11 +32,11 @@ export function getEnabledQuestions(settings) {
  * Health metrics we correlate against
  */
 export const HEALTH_METRICS = [
-  { key: 'sleep_score', label: 'Sleep Score', emoji: '🌙' },
-  { key: 'hrv', label: 'HRV', emoji: '💓' },
-  { key: 'recovery_score', label: 'Recovery Score', emoji: '⚡' },
-  { key: 'sleep_duration', label: 'Sleep Duration', emoji: '😴' },
-  { key: 'resting_hr', label: 'Resting Heart Rate', emoji: '❤️' },
+  { key: 'sleep_score', labelKey: 'hmSleepScore', label: 'Sleep Score', emoji: '🌙' },
+  { key: 'hrv', labelKey: 'hmHrv', label: 'HRV', emoji: '💓' },
+  { key: 'recovery_score', labelKey: 'hmRecovery', label: 'Recovery Score', emoji: '⚡' },
+  { key: 'sleep_duration', labelKey: 'hmSleepDuration', label: 'Sleep Duration', emoji: '😴' },
+  { key: 'resting_hr', labelKey: 'hmRestingHR', label: 'Resting Heart Rate', emoji: '❤️' },
 ];
 
 /**
@@ -122,9 +122,11 @@ export function computeCorrelations(journalEntries, healthLogs) {
       results.push({
         id: `${jQ.key}_${hMetric.key}`,
         journalKey: jQ.key,
+        journalLabelKey: jQ.labelKey,
         journalLabel: jQ.label,
         journalEmoji: jQ.emoji,
         healthKey: hMetric.key,
+        healthLabelKey: hMetric.labelKey,
         healthLabel: hMetric.label,
         healthEmoji: hMetric.emoji,
         r: Math.round(r * 100) / 100,

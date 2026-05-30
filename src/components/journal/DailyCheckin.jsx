@@ -148,8 +148,8 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
               >
                 <span className="text-xl">{q.emoji}</span>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground">{q.label}</p>
-                  <p className="text-[10px] text-muted-foreground">{q.description}</p>
+                  <p className="text-sm font-medium text-foreground">{t(q.labelKey)}</p>
+                  <p className="text-[10px] text-muted-foreground">{t(q.descKey)}</p>
                 </div>
                 {pendingEnabled.has(q.key) && <Check className="h-4 w-4 text-primary flex-shrink-0" />}
               </button>
@@ -250,8 +250,8 @@ export default function DailyCheckin({ onSave, onClose, settings, existingEntry,
               <div className="flex items-start gap-3">
                 <span className="text-3xl">{current.emoji}</span>
                 <div>
-                  <h3 className="text-lg font-bold text-foreground">{current.label}</h3>
-                  <p className="text-sm text-muted-foreground">{current.description}</p>
+                  <h3 className="text-lg font-bold text-foreground">{t(current.labelKey)}</h3>
+                  <p className="text-sm text-muted-foreground">{t(current.descKey)}</p>
                 </div>
               </div>
               <QuestionInput

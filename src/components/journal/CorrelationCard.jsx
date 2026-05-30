@@ -12,7 +12,9 @@ const STRENGTH_STYLES = {
 
 export default function CorrelationCard({ correlation, index }) {
   const { t, lang } = useLanguage();
-  const { journalEmoji, journalLabel, healthEmoji, healthLabel, r, strength, positive, pctDiff, dataPoints, series } = correlation;
+  const { journalEmoji, journalLabelKey, journalLabel, healthEmoji, healthLabelKey, healthLabel, r, strength, positive, pctDiff, dataPoints, series } = correlation;
+  const jLabel = journalLabelKey ? t(journalLabelKey) : journalLabel;
+  const hLabel = healthLabelKey ? t(healthLabelKey) : healthLabel;
   const styles = STRENGTH_STYLES[strength];
 
   const Icon = positive ? TrendingUp : r === 0 ? Minus : TrendingDown;
@@ -48,7 +50,7 @@ export default function CorrelationCard({ correlation, index }) {
           <span className="text-lg flex-shrink-0">{journalEmoji}</span>
           <div className="min-w-0">
             <p className="text-xs font-bold text-foreground leading-tight truncate">
-              {journalLabel} → {healthEmoji} {healthLabel}
+              {jLabel} → {healthEmoji} {hLabel}
             </p>
             <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug line-clamp-2">{insightText}</p>
           </div>
@@ -72,7 +74,7 @@ export default function CorrelationCard({ correlation, index }) {
               <XAxis
                 dataKey="x"
                 type="number"
-                name={journalLabel}
+                name={jLabel}
                 tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }}
                 axisLine={false}
                 tickLine={false}
@@ -80,7 +82,7 @@ export default function CorrelationCard({ correlation, index }) {
               <YAxis
                 dataKey="y"
                 type="number"
-                name={healthLabel}
+                name={hLabel}
                 tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }}
                 axisLine={false}
                 tickLine={false}
@@ -89,7 +91,7 @@ export default function CorrelationCard({ correlation, index }) {
               <Tooltip
                 cursor={{ strokeDasharray: '3 3' }}
                 contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }}
-                formatter={(val, name) => [val, name === 'x' ? journalLabel : healthLabel]}
+                formatter={(val, name) => [val, name === 'x' ? jLabel : hLabel]}
               />
               <Scatter
                 data={scatterData}
