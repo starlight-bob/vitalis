@@ -187,24 +187,28 @@ export default function Journal() {
                 <PlusCircle className="h-4 w-4" /> Start Today's Check-in
               </Button>
             </div>
-          ) : filteredCorrelations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-              <span className="text-4xl">🔍</span>
-              <p className="text-sm font-semibold text-foreground">No significant correlations found</p>
-              <p className="text-xs text-muted-foreground">Try a different filter, or keep logging to find patterns.</p>
-            </div>
           ) : (
             <>
               <CorrelationFilters active={filterMetric} onChange={setFilterMetric} />
-              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 border border-border rounded-xl px-3 py-2 w-full overflow-hidden">
-                <Info className="h-3.5 w-3.5 flex-shrink-0" />
-                <span className="truncate">Ranked by correlation strength. Based on {entries.length} days of check-ins.</span>
-              </div>
-              <div className="space-y-3">
-                {filteredCorrelations.map((c, i) => (
-                  <CorrelationCard key={c.id} correlation={c} index={i} />
-                ))}
-              </div>
+              {filteredCorrelations.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
+                  <span className="text-4xl">🔍</span>
+                  <p className="text-sm font-semibold text-foreground">No significant correlations found</p>
+                  <p className="text-xs text-muted-foreground">Try a different filter, or keep logging to find patterns.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 border border-border rounded-xl px-3 py-2 w-full overflow-hidden">
+                    <Info className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="truncate">Ranked by correlation strength. Based on {entries.length} days of check-ins.</span>
+                  </div>
+                  <div className="space-y-3">
+                    {filteredCorrelations.map((c, i) => (
+                      <CorrelationCard key={c.id} correlation={c} index={i} />
+                    ))}
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
