@@ -16,7 +16,7 @@ const CustomTooltip = ({ active, payload, tFn }) => {
 export default function BioAgeRadar({ systems, chronoAge }) {
   const { t } = useLanguage();
   const data = systems.map(s => ({
-    label: s.label,
+    label: t(s.labelKey),
     age: s.age,
     // score: invert delta so "younger" = higher score on radar
     score: Math.max(0, Math.min(100, 50 - s.delta * 4)),

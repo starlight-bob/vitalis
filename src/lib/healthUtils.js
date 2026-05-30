@@ -62,5 +62,6 @@ export function calculateEnergyLevel(log, t) {
  */
 export function formatDateShort(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const locale = typeof window !== 'undefined' && localStorage.getItem('app_lang') === 'zh' ? 'zh-CN' : 'en-US';
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
 }

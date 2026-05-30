@@ -12,7 +12,13 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/LanguageContext';
 
-const CATEGORIES = ['Blood Work', 'Imaging', 'Urine', 'Hormone Panel', 'Other'];
+const CATEGORY_KEYS = [
+  { val: 'Blood Work', key: 'catBloodWork' },
+  { val: 'Imaging', key: 'catImaging' },
+  { val: 'Urine', key: 'catUrine' },
+  { val: 'Hormone Panel', key: 'catHormone' },
+  { val: 'Other', key: 'catOther' },
+];
 
 export default function LabUploadForm({ onClose, existing }) {
   const { t } = useLanguage();
@@ -91,7 +97,7 @@ export default function LabUploadForm({ onClose, existing }) {
             <Input
               value={form.title}
               onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-              placeholder="e.g. Blood Panel - March 2026"
+              placeholder={t('labTitlePlaceholder')}
               className="bg-background border-border"
             />
           </div>
@@ -115,7 +121,7 @@ export default function LabUploadForm({ onClose, existing }) {
                 className="w-full flex items-center justify-between px-3 py-2 rounded-md border border-border bg-background text-sm text-foreground"
               >
                 <span className={form.category ? 'text-foreground' : 'text-muted-foreground'}>
-                  {form.category || t('selectCategory')}
+                  {form.category ? t(CATEGORY_KEYS.find(c => c.val === form.category)?.key || 'catOther') : t('selectCategory')}
                 </span>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </button>
@@ -125,17 +131,17 @@ export default function LabUploadForm({ onClose, existing }) {
                     <SheetTitle>{t('selectCategorySheet')}</SheetTitle>
                   </SheetHeader>
                   <div className="space-y-1">
-                    {CATEGORIES.map(c => (
+                    {CATEGORY_KEYS.map(c => (
                       <button
-                        key={c}
+                        key={c.val}
                         type="button"
-                        onClick={() => { setForm(f => ({ ...f, category: c })); setSheetOpen(false); }}
+                        onClick={() => { setForm(f => ({ ...f, category: c.val })); setSheetOpen(false); }}
                         className={cn(
                           'w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors',
-                          form.category === c ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-foreground'
+                          form.category === c.val ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-foreground'
                         )}
                       >
-                        {c}
+                        {t(c.key)}
                       </button>
                     ))}
                   </div>
@@ -190,7 +196,7 @@ export default function LabUploadForm({ onClose, existing }) {
             <Textarea
               value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-              placeholder="Doctor's comments, key values, follow-up actions…"
+              placeholder={t('labNotesPlaceholder')}
               className="resize-none h-20 bg-background border-border"
             />
           </div>

@@ -86,12 +86,12 @@ export function calculateBioAge(logs, chronoAge = 35) {
     chronoAge,
     delta: overallBioAge - chronoAge,
     systems: [
-      { key: 'cardiovascular', label: 'Cardiovascular', age: cardiovascularAge, delta: cardiovascularAge - chronoAge, icon: '❤️', description: 'HRV & resting heart rate' },
-      { key: 'metabolic', label: 'Metabolic', age: metabolicAge, delta: metabolicAge - chronoAge, icon: '⚡', description: 'Activity, strain & recovery' },
-      { key: 'sleep', label: 'Sleep', age: sleepAge, delta: sleepAge - chronoAge, icon: '🌙', description: 'Duration, quality & consistency' },
-      { key: 'respiratory', label: 'Respiratory', age: respiratoryAge, delta: respiratoryAge - chronoAge, icon: '🫁', description: 'Estimated from HRV & HR trends' },
-      { key: 'stress', label: 'Stress & HRV', age: stressAge, delta: stressAge - chronoAge, icon: '🧠', description: 'HRV variability & recovery scores' },
-      { key: 'musculoskeletal', label: 'Musculoskeletal', age: musculoskeletalAge, delta: musculoskeletalAge - chronoAge, icon: '💪', description: 'Workout frequency & load balance' },
+      { key: 'cardiovascular', labelKey: 'sysCardiovascular', descKey: 'sysCardiovascularDesc', age: cardiovascularAge, delta: cardiovascularAge - chronoAge, icon: '❤️' },
+      { key: 'metabolic', labelKey: 'sysMetabolic', descKey: 'sysMetabolicDesc', age: metabolicAge, delta: metabolicAge - chronoAge, icon: '⚡' },
+      { key: 'sleep', labelKey: 'sysSleep', descKey: 'sysSleepDesc', age: sleepAge, delta: sleepAge - chronoAge, icon: '🌙' },
+      { key: 'respiratory', labelKey: 'sysRespiratory', descKey: 'sysRespiratoryDesc', age: respiratoryAge, delta: respiratoryAge - chronoAge, icon: '🫁' },
+      { key: 'stress', labelKey: 'sysStress', descKey: 'sysStressDesc', age: stressAge, delta: stressAge - chronoAge, icon: '🧠' },
+      { key: 'musculoskeletal', labelKey: 'sysMusculoskeletal', descKey: 'sysMusculoskeletalDesc', age: musculoskeletalAge, delta: musculoskeletalAge - chronoAge, icon: '💪' },
     ],
     dataPoints: recent.length,
   };
@@ -112,7 +112,7 @@ export function buildBioAgeTrend(logs, chronoAge = 35) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const year = d.getFullYear();
     const month = d.getMonth();
-    const label = d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    const label = d.toLocaleDateString(typeof window !== 'undefined' && localStorage.getItem('app_lang') === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', year: '2-digit' });
 
     const monthLogs = (Array.isArray(sorted) ? sorted : []).filter(l => {
       const ld = new Date(l.date + 'T00:00:00');

@@ -3,7 +3,9 @@ import { useLanguage } from '@/lib/LanguageContext';
 
 export default function SystemCard({ system, chronoAge, delay = 0 }) {
   const { t } = useLanguage();
-  const { label, age, delta, icon, description } = system;
+  const { labelKey, descKey, age, delta, icon } = system;
+  const label = t(labelKey);
+  const description = t(descKey);
   const younger = delta < 0;
   const same = delta === 0;
   const absDelta = Math.abs(delta);

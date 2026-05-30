@@ -2,14 +2,16 @@ import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, Tooltip } from 'recharts';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const STRENGTH_STYLES = {
-  strong:   { bg: 'bg-emerald-500/10 border-emerald-500/30', badge: 'bg-emerald-500/20 text-emerald-600', text: 'Strong' },
-  moderate: { bg: 'bg-blue-500/10 border-blue-500/30',     badge: 'bg-blue-500/20 text-blue-600',     text: 'Moderate' },
-  weak:     { bg: 'bg-muted border-border',                  badge: 'bg-muted text-muted-foreground',   text: 'Weak' },
+  strong:   { bg: 'bg-emerald-500/10 border-emerald-500/30', badge: 'bg-emerald-500/20 text-emerald-600', key: 'strongCorrelation' },
+  moderate: { bg: 'bg-blue-500/10 border-blue-500/30',     badge: 'bg-blue-500/20 text-blue-600',     key: 'moderateCorrelation' },
+  weak:     { bg: 'bg-muted border-border',                  badge: 'bg-muted text-muted-foreground',   key: 'weakCorrelation' },
 };
 
 export default function CorrelationCard({ correlation, index }) {
+  const { t, lang } = useLanguage();
   const { journalEmoji, journalLabel, healthEmoji, healthLabel, r, strength, positive, pctDiff, dataPoints, series } = correlation;
   const styles = STRENGTH_STYLES[strength];
 
@@ -18,11 +20,17 @@ export default function CorrelationCard({ correlation, index }) {
 
   const insightText = (() => {
     if (pctDiff != null && Math.abs(pctDiff) >= 5) {
-      const dir = pctDiff > 0 ? 'higher' : 'lower';
+      const dir = pctDiff > 0 ? t('higher') : t('lower');
       const absP = Math.abs(pctDiff);
-      return `On days with more ${journalLabel.toLowerCase()}, your ${healthLabel} was ${absP}% ${dir}.`;
+      // EN: "On days with more X, your Y was N% higher."
+      // ZH: "在X较多的日子，您的Y高N%。"
+      return lang === 'zh'
+        ? `在${journalLabel}较多的日子，您的${healthLabel}${dir}${absP}%。`
+        : `On days with more ${journalLabel.toLowerCase()}, your ${healthLabel} was ${absP}% ${dir}.`;
     }
-    return `${journalLabel} ${positive ? 'positively' : 'negatively'} correlates with your ${healthLabel}.`;
+    return lang === 'zh'
+      ? `${journalLabel}与您的${healthLabel}${positive ? '正' : '负'}相关。`
+      : `${journalLabel} ${positive ? 'positively' : 'negatively'} correlates with your ${healthLabel}.`;
   })();
 
   const scatterData = series.map(s => ({ x: s.jVal, y: s.hVal }));
@@ -47,7 +55,7 @@ export default function CorrelationCard({ correlation, index }) {
         </div>
         <div className="flex items-center gap-1.5 flex-shrink-0">
           <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', styles.badge)}>
-            {styles.text}
+            {t(styles.key)}
           </span>
           <div className="flex items-center gap-0.5">
             <Icon className={cn('h-3 w-3', iconColor)} />
@@ -95,7 +103,7 @@ export default function CorrelationCard({ correlation, index }) {
       )}
 
       {/* Footer */}
-      <p className="text-[10px] text-muted-foreground">Based on {dataPoints} days</p>
+      <p className="text-[10px] text-muted-foreground">{t('basedOn')} {dataPoints} {t('days')}</p>
     </motion.div>
   );
 }
