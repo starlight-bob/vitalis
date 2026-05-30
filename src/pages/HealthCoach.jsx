@@ -133,14 +133,11 @@ Coach:`;
   // Height: full viewport minus top nav (desktop sidebar offset handled by layout)
   // On mobile we subtract the bottom nav (~64px) + safe area
   return (
-    <div
-      className="flex flex-col bg-background -mx-4 sm:-mx-6 lg:-mx-8 -mt-6 -mb-24 md:-mb-6"
-      style={{ height: '100dvh' }}
-    >
+    <div className="flex flex-col h-screen bg-background">
       <div className="flex flex-col h-full max-w-3xl mx-auto w-full">
 
         {/* Header */}
-        <div className="flex-shrink-0 px-4 sm:px-6 pt-4 md:pt-6 pb-2">
+        <div className="flex-shrink-0 px-4 sm:px-6 pt-20 md:pt-6 pb-2">
           <CoachHeader logsCount={logs.length} labCount={labResults.length} />
         </div>
 
@@ -156,7 +153,7 @@ Coach:`;
         {/* Bottom: suggestions + input */}
         <div
           className="flex-shrink-0 px-4 sm:px-6 pt-3 space-y-2 border-t border-border/40 bg-background"
-          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)' }}
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}
         >
           {showSuggestions && (
             <SuggestedPrompts onSelect={sendMessage} disabled={isLoading} />

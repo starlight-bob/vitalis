@@ -98,10 +98,19 @@ export default function AppLayout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 min-h-screen overflow-x-hidden w-full min-w-0">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6 pt-20 md:pt-6" style={{ overflowX: 'hidden' }}>
+      <main className={cn(
+        "flex-1 md:ml-64 w-full min-w-0",
+        location.pathname === '/coach'
+          ? "h-screen overflow-hidden"
+          : "min-h-screen overflow-x-hidden"
+      )}>
+        {location.pathname === '/coach' ? (
           <Outlet />
-        </div>
+        ) : (
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6 pt-20 md:pt-6" style={{ overflowX: 'hidden' }}>
+            <Outlet />
+          </div>
+        )}
       </main>
 
       <div className="safe-top fixed top-0 left-0 right-0 z-40 pointer-events-none md:hidden" />
