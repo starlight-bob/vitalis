@@ -135,7 +135,7 @@ export default function AdvancedLabs() {
 
   const filteredCatalog = activeCategory === 'All'
     ? catalog
-    : catalog.filter(t => t.category === activeCategory);
+    : catalog.filter(test => test.category === activeCategory);
 
   return (
     <div className="space-y-6">
