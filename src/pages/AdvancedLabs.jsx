@@ -1,14 +1,27 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FlaskConical, ShoppingBag, ClipboardList, Loader2, ShoppingCart } from 'lucide-react';
+import { FlaskConical, ShoppingBag, ClipboardList, Loader2, ShoppingCart, Plus, Search, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import LabTestCard from '@/components/advanced-labs/LabTestCard';
 import AdvancedLabResultItem from '@/components/advanced-labs/AdvancedLabResultItem';
 import AdvancedLabResultModal from '@/components/advanced-labs/AdvancedLabResultModal';
 import OrderModal from '@/components/advanced-labs/OrderModal';
+import LabTimelineItem from '@/components/labs/LabTimelineItem';
+import LabUploadForm from '@/components/labs/LabUploadForm';
+import LabDetailModal from '@/components/labs/LabDetailModal';
 import { cn } from '@/lib/utils';
+
+const LAB_CATEGORIES = [
+  { key: 'All', label: 'All' },
+  { key: 'Blood Work', label: 'Blood Work' },
+  { key: 'Imaging', label: 'Imaging' },
+  { key: 'Urine', label: 'Urine' },
+  { key: 'Hormone Panel', label: 'Hormone Panel' },
+  { key: 'Other', label: 'Other' },
+];
 
 const TABS = [
   { key: 'shop', label: 'Shop Tests', icon: ShoppingBag },
@@ -74,6 +87,13 @@ export default function AdvancedLabs() {
   const [orderingTest, setOrderingTest] = useState(null);
   const [viewingResult, setViewingResult] = useState(null);
 
+  // My Results (uploaded lab records) state
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [editingRecord, setEditingRecord] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [search, setSearch] = useState('');
+  const [activeLabCategory, setActiveLabCategory] = useState('All');
+
   // Try to load user-created tests from DB, fall back to sample catalog
   const { data: dbTests = [] } = useQuery({
     queryKey: ['labTests'],
@@ -85,8 +105,36 @@ export default function AdvancedLabs() {
     queryFn: () => base44.entities.AdvancedLabResult.list('-created_date', 100),
   });
 
+  // Uploaded lab records (from LabResult entity)
+  const { data: rawLabRecords, isLoading: loadingLabRecords } = useQuery({
+    queryKey: ['labResults'],
+    queryFn: () => base44.entities.LabResult.list('-date', 200),
+  });
+
   const results = Array.isArray(rawResults) ? rawResults : [];
+  const labRecords = Array.isArray(rawLabRecords) ? rawLabRecords : [];
   const catalog = dbTests.length > 0 ? dbTests : SAMPLE_TESTS;
+
+  const filteredLabRecords = useMemo(() => {
+    return labRecords
+      .filter(r => activeLabCategory === 'All' || r.category === activeLabCategory)
+      .filter(r => {
+        if (!search.trim()) return true;
+        const q = search.toLowerCase();
+        return r.title?.toLowerCase().includes(q) || r.notes?.toLowerCase().includes(q) || r.category?.toLowerCase().includes(q);
+      })
+      .sort((a, b) => b.date?.localeCompare(a.date));
+  }, [labRecords, activeLabCategory, search]);
+
+  const groupedLabRecords = useMemo(() => {
+    const map = {};
+    filteredLabRecords.forEach(r => {
+      const year = r.date?.slice(0, 4) || 'Unknown';
+      if (!map[year]) map[year] = [];
+      map[year].push(r);
+    });
+    return Object.entries(map).sort(([a], [b]) => b.localeCompare(a));
+  }, [filteredLabRecords]);
 
   const filteredCatalog = activeCategory === 'All'
     ? catalog
@@ -123,9 +171,9 @@ export default function AdvancedLabs() {
             >
               <Icon className="h-4 w-4" />
               {tab.label}
-              {tab.key === 'results' && results.length > 0 && (
+              {tab.key === 'results' && (results.length + labRecords.length) > 0 && (
                 <span className="h-4 px-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center">
-                  {results.length}
+                  {results.length + labRecords.length}
                 </span>
               )}
             </button>
@@ -181,12 +229,63 @@ export default function AdvancedLabs() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -16 }}
             transition={{ duration: 0.18 }}
+            className="space-y-4"
           >
-            {loadingResults ? (
-              <div className="flex items-center justify-center py-20">
+            {/* Upload button + search */}
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search records…"
+                  className="pl-10 bg-card border-border"
+                />
+              </div>
+              <Button onClick={() => { setEditingRecord(null); setShowUploadForm(true); }} className="gap-2 flex-shrink-0">
+                <Plus className="h-4 w-4" /> Add Record
+              </Button>
+            </div>
+
+            {/* Category pills */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <SlidersHorizontal className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+              {LAB_CATEGORIES.map(cat => (
+                <button
+                  key={cat.key}
+                  onClick={() => setActiveLabCategory(cat.key)}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-200 font-medium ${
+                    activeLabCategory === cat.key
+                      ? 'bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20'
+                      : 'bg-card text-muted-foreground border-border hover:border-primary/30 hover:text-foreground'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Ordered test results */}
+            {results.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ordered Tests</p>
+                {results.map((result, i) => (
+                  <AdvancedLabResultItem
+                    key={result.id}
+                    result={result}
+                    onClick={setViewingResult}
+                    delay={i * 0.04}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Uploaded lab records */}
+            {loadingLabRecords ? (
+              <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
-            ) : results.length === 0 ? (
+            ) : filteredLabRecords.length === 0 && results.length === 0 ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-border text-center px-6">
                 <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
@@ -194,25 +293,44 @@ export default function AdvancedLabs() {
                 </div>
                 <h3 className="text-base font-semibold text-foreground mb-1">No results yet</h3>
                 <p className="text-sm text-muted-foreground mb-5 max-w-xs">
-                  Order your first lab test to see detailed biomarker results here.
+                  Upload a lab record or order your first test to see results here.
                 </p>
-                <Button onClick={() => setActiveTab('shop')} className="gap-2 rounded-xl">
-                  <ShoppingCart className="h-4 w-4" />
-                  Browse Tests
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => { setEditingRecord(null); setShowUploadForm(true); }} className="gap-2 rounded-xl">
+                    <Plus className="h-4 w-4" /> Upload Record
+                  </Button>
+                  <Button onClick={() => setActiveTab('shop')} className="gap-2 rounded-xl">
+                    <ShoppingCart className="h-4 w-4" /> Browse Tests
+                  </Button>
+                </div>
               </motion.div>
-            ) : (
-              <div className="space-y-3">
-                {results.map((result, i) => (
-                  <AdvancedLabResultItem
-                    key={result.id}
-                    result={result}
-                    onClick={setViewingResult}
-                    delay={i * 0.05}
-                  />
+            ) : filteredLabRecords.length > 0 ? (
+              <div className="space-y-6">
+                {labRecords.length > 0 && (
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Uploaded Records</p>
+                )}
+                {groupedLabRecords.map(([year, items]) => (
+                  <div key={year}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{year}</span>
+                      <div className="flex-1 h-px bg-border" />
+                      <span className="text-xs text-muted-foreground">{items.length} records</span>
+                    </div>
+                    <div>
+                      {items.map((r, i) => (
+                        <LabTimelineItem
+                          key={r.id}
+                          result={r}
+                          onClick={setSelectedRecord}
+                          isLast={i === items.length - 1}
+                          delay={i * 0.05}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
-            )}
+            ) : null}
           </motion.div>
         )}
       </AnimatePresence>
@@ -224,6 +342,19 @@ export default function AdvancedLabs() {
         )}
         {viewingResult && (
           <AdvancedLabResultModal result={viewingResult} onClose={() => setViewingResult(null)} />
+        )}
+        {(showUploadForm || editingRecord) && (
+          <LabUploadForm
+            existing={editingRecord}
+            onClose={() => { setShowUploadForm(false); setEditingRecord(null); }}
+          />
+        )}
+        {selectedRecord && (
+          <LabDetailModal
+            result={selectedRecord}
+            onClose={() => setSelectedRecord(null)}
+            onEdit={(r) => { setSelectedRecord(null); setEditingRecord(r); setShowUploadForm(true); }}
+          />
         )}
       </AnimatePresence>
     </div>

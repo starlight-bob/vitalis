@@ -17,7 +17,6 @@ const LogEntry       = lazy(() => import('@/pages/LogEntry'));
 const Trends         = lazy(() => import('@/pages/Trends'));
 const HealthCoach    = lazy(() => import('@/pages/HealthCoach'));
 const ConnectDevices = lazy(() => import('@/pages/ConnectDevices'));
-const LabResults     = lazy(() => import('@/pages/LabResults'));
 const BiologicalAge  = lazy(() => import('@/pages/BiologicalAge'));
 const Account        = lazy(() => import('@/pages/Account'));
 const DeviceSettings = lazy(() => import('@/pages/DeviceSettings'));
@@ -55,7 +54,6 @@ function AnimatedRoutes() {
             <Route path="/trends" element={<Trends />} />
             <Route path="/coach" element={<HealthCoach />} />
             <Route path="/devices" element={<ConnectDevices />} />
-            <Route path="/labs" element={<LabResults />} />
             <Route path="/bio-age" element={<BiologicalAge />} />
             <Route path="/account" element={<Account />} />
             <Route path="/device-settings" element={<DeviceSettings />} />

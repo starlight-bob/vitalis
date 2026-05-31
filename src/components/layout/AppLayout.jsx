@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X, BookOpen, TestTube2 } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, Dna, MoreHorizontal, X, BookOpen, TestTube2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
@@ -19,7 +19,6 @@ const MORE_NAV_KEYS = [
   { path: '/journal', icon: BookOpen, labelKey: 'journal' },
   { path: '/advanced-labs', icon: TestTube2, label: 'Advanced Labs' },
   { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
-  { path: '/labs', icon: FlaskConical, labelKey: 'labResults' },
 ];
 
 const ALL_SIDEBAR_NAV_KEYS = [
@@ -30,7 +29,6 @@ const ALL_SIDEBAR_NAV_KEYS = [
   { path: '/coach', icon: Sparkles, labelKey: 'healthCoach' },
   { path: '/advanced-labs', icon: TestTube2, label: 'Advanced Labs' },
   { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
-  { path: '/labs', icon: FlaskConical, labelKey: 'labResults' },
   { path: '/bio-age', icon: Dna, labelKey: 'biologicalAge' },
 ];
 
