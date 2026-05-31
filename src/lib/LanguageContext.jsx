@@ -394,6 +394,10 @@ const translations = {
 
     // Advanced Labs
     advancedLabsTitle: 'Advanced Labs',
+    popular: 'Popular',
+    businessDays: 'business days',
+    orderTest: 'Order Test',
+    moreMarkers: 'more',
     advancedLabsDesc: 'Order precision tests · View your results',
     shopTests: 'Shop Tests',
     myResults: 'My Results',
@@ -800,6 +804,10 @@ const translations = {
 
     // Advanced Labs
     advancedLabsTitle: '高级检验',
+    popular: '热门',
+    businessDays: '个工作日',
+    orderTest: '立即订购',
+    moreMarkers: '更多',
     advancedLabsDesc: '订购精准检测 · 查看您的报告',
     shopTests: '购买检测',
     myResults: '我的报告',

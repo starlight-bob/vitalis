@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Clock, Star, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const CATEGORY_COLORS = {
   'Blood Panel': 'text-red-500 bg-red-500/10',
@@ -14,6 +15,7 @@ const CATEGORY_COLORS = {
 };
 
 export default function LabTestCard({ test, onBuy, delay = 0 }) {
+  const { t } = useLanguage();
   const colorClass = CATEGORY_COLORS[test.category] || 'text-primary bg-primary/10';
 
   return (
@@ -31,7 +33,7 @@ export default function LabTestCard({ test, onBuy, delay = 0 }) {
             </span>
             {test.popular && (
               <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full">
-                <Star className="h-2.5 w-2.5 fill-current" /> Popular
+                <Star className="h-2.5 w-2.5 fill-current" /> {t('popular')}
               </span>
             )}
           </div>
@@ -51,7 +53,7 @@ export default function LabTestCard({ test, onBuy, delay = 0 }) {
             <span key={b} className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{b}</span>
           ))}
           {test.biomarkers.length > 5 && (
-            <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full">+{test.biomarkers.length - 5} more</span>
+            <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full">+{test.biomarkers.length - 5} {t('moreMarkers')}</span>
           )}
         </div>
       )}
@@ -60,7 +62,7 @@ export default function LabTestCard({ test, onBuy, delay = 0 }) {
         {test.turnaround_days && (
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Clock className="h-3 w-3" />
-            <span>{test.turnaround_days} business days</span>
+            <span>{test.turnaround_days} {t('businessDays')}</span>
           </div>
         )}
         <Button
@@ -69,7 +71,7 @@ export default function LabTestCard({ test, onBuy, delay = 0 }) {
           className="ml-auto gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
         >
           <ShoppingCart className="h-3.5 w-3.5" />
-          Order Test
+          {t('orderTest')}
         </Button>
       </div>
     </motion.div>
