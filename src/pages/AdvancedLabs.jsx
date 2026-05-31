@@ -13,19 +13,15 @@ import LabTimelineItem from '@/components/labs/LabTimelineItem';
 import LabUploadForm from '@/components/labs/LabUploadForm';
 import LabDetailModal from '@/components/labs/LabDetailModal';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/LanguageContext';
 
-const LAB_CATEGORIES = [
-  { key: 'All', label: 'All' },
-  { key: 'Blood Work', label: 'Blood Work' },
-  { key: 'Imaging', label: 'Imaging' },
-  { key: 'Urine', label: 'Urine' },
-  { key: 'Hormone Panel', label: 'Hormone Panel' },
-  { key: 'Other', label: 'Other' },
-];
-
-const TABS = [
-  { key: 'shop', label: 'Shop Tests', icon: ShoppingBag },
-  { key: 'results', label: 'My Results', icon: ClipboardList },
+const LAB_CATEGORY_KEYS = [
+  { key: 'All',           labelKey: 'catAll' },
+  { key: 'Blood Work',    labelKey: 'catBloodWork' },
+  { key: 'Imaging',       labelKey: 'catImaging' },
+  { key: 'Urine',         labelKey: 'catUrine' },
+  { key: 'Hormone Panel', labelKey: 'catHormone' },
+  { key: 'Other',         labelKey: 'catOther' },
 ];
 
 const SAMPLE_TESTS = [
@@ -82,6 +78,7 @@ const SAMPLE_TESTS = [
 const CATEGORY_FILTERS = ['All', 'Blood Panel', 'Hormone Panel', 'Vitamin & Minerals', 'Thyroid', 'Metabolic', 'Cardiovascular', 'Gut Health'];
 
 export default function AdvancedLabs() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('shop');
   const [activeCategory, setActiveCategory] = useState('All');
   const [orderingTest, setOrderingTest] = useState(null);
@@ -149,15 +146,18 @@ export default function AdvancedLabs() {
           <FlaskConical className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Advanced Labs</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">Order precision tests · View your results</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">{t('advancedLabsTitle')}</h1>
+          <p className="text-muted-foreground text-sm mt-0.5">{t('advancedLabsDesc')}</p>
         </div>
       </motion.div>
 
       {/* Tab switcher */}
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
         className="flex bg-muted rounded-xl p-1 gap-1">
-        {TABS.map(tab => {
+        {[
+          { key: 'shop', labelKey: 'shopTests', icon: ShoppingBag },
+          { key: 'results', labelKey: 'myResults', icon: ClipboardList },
+        ].map(tab => {
           const Icon = tab.icon;
           const active = activeTab === tab.key;
           return (
@@ -170,7 +170,7 @@ export default function AdvancedLabs() {
               )}
             >
               <Icon className="h-4 w-4" />
-              {tab.label}
+              {t(tab.labelKey)}
               {tab.key === 'results' && (results.length + labRecords.length) > 0 && (
                 <span className="h-4 px-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center">
                   {results.length + labRecords.length}
@@ -238,19 +238,19 @@ export default function AdvancedLabs() {
                 <Input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  placeholder="Search records…"
+                  placeholder={t('searchRecordsPlaceholder')}
                   className="pl-10 bg-card border-border"
                 />
               </div>
               <Button onClick={() => { setEditingRecord(null); setShowUploadForm(true); }} className="gap-2 flex-shrink-0">
-                <Plus className="h-4 w-4" /> Add Record
+                <Plus className="h-4 w-4" /> {t('addRecord')}
               </Button>
             </div>
 
             {/* Category pills */}
             <div className="flex items-center gap-2 flex-wrap">
               <SlidersHorizontal className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-              {LAB_CATEGORIES.map(cat => (
+              {LAB_CATEGORY_KEYS.map(cat => (
                 <button
                   key={cat.key}
                   onClick={() => setActiveLabCategory(cat.key)}
@@ -260,7 +260,7 @@ export default function AdvancedLabs() {
                       : 'bg-card text-muted-foreground border-border hover:border-primary/30 hover:text-foreground'
                   }`}
                 >
-                  {cat.label}
+                  {t(cat.labelKey)}
                 </button>
               ))}
             </div>
@@ -268,7 +268,7 @@ export default function AdvancedLabs() {
             {/* Ordered test results */}
             {results.length > 0 && (
               <div className="space-y-3">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ordered Tests</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('orderedTests')}</p>
                 {results.map((result, i) => (
                   <AdvancedLabResultItem
                     key={result.id}
@@ -291,30 +291,30 @@ export default function AdvancedLabs() {
                 <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
                   <ClipboardList className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-base font-semibold text-foreground mb-1">No results yet</h3>
+                <h3 className="text-base font-semibold text-foreground mb-1">{t('noResultsYet')}</h3>
                 <p className="text-sm text-muted-foreground mb-5 max-w-xs">
-                  Upload a lab record or order your first test to see results here.
+                  {t('noResultsDesc')}
                 </p>
                 <div className="flex gap-2">
                   <Button variant="outline" onClick={() => { setEditingRecord(null); setShowUploadForm(true); }} className="gap-2 rounded-xl">
-                    <Plus className="h-4 w-4" /> Upload Record
+                    <Plus className="h-4 w-4" /> {t('uploadRecord')}
                   </Button>
                   <Button onClick={() => setActiveTab('shop')} className="gap-2 rounded-xl">
-                    <ShoppingCart className="h-4 w-4" /> Browse Tests
+                    <ShoppingCart className="h-4 w-4" /> {t('browseTests')}
                   </Button>
                 </div>
               </motion.div>
             ) : filteredLabRecords.length > 0 ? (
               <div className="space-y-6">
                 {labRecords.length > 0 && (
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Uploaded Records</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('uploadedRecords')}</p>
                 )}
                 {groupedLabRecords.map(([year, items]) => (
                   <div key={year}>
                     <div className="flex items-center gap-3 mb-4">
                       <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{year}</span>
                       <div className="flex-1 h-px bg-border" />
-                      <span className="text-xs text-muted-foreground">{items.length} records</span>
+                      <span className="text-xs text-muted-foreground">{items.length} {t('advLabsRecords')}</span>
                     </div>
                     <div>
                       {items.map((r, i) => (

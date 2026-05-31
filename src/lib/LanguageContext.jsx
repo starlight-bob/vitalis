@@ -391,6 +391,21 @@ const translations = {
 
     // Health Coach
     healthCoachTitle: 'Health Coach',
+
+    // Advanced Labs
+    advancedLabsTitle: 'Advanced Labs',
+    advancedLabsDesc: 'Order precision tests · View your results',
+    shopTests: 'Shop Tests',
+    myResults: 'My Results',
+    searchRecordsPlaceholder: 'Search records…',
+    addRecord: 'Add Record',
+    orderedTests: 'Ordered Tests',
+    uploadedRecords: 'Uploaded Records',
+    noResultsYet: 'No results yet',
+    noResultsDesc: 'Upload a lab record or order your first test to see results here.',
+    uploadRecord: 'Upload Record',
+    browseTests: 'Browse Tests',
+    advLabsRecords: 'records',
   },
   zh: {
     // Nav
@@ -782,6 +797,21 @@ const translations = {
 
     // Health Coach
     healthCoachTitle: '健康教练',
+
+    // Advanced Labs
+    advancedLabsTitle: '高级检验',
+    advancedLabsDesc: '订购精准检测 · 查看您的报告',
+    shopTests: '购买检测',
+    myResults: '我的报告',
+    searchRecordsPlaceholder: '搜索记录…',
+    addRecord: '添加记录',
+    orderedTests: '已订购的检测',
+    uploadedRecords: '已上传的记录',
+    noResultsYet: '暂无报告',
+    noResultsDesc: '上传检验记录或订购首个检测，即可在此查看结果。',
+    uploadRecord: '上传记录',
+    browseTests: '浏览检测',
+    advLabsRecords: '条记录',
   },
 };
 
