@@ -1,0 +1,52 @@
+{
+  "name": "LabTest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the lab test"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of what the test measures"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Blood Panel",
+        "Hormone Panel",
+        "Vitamin & Minerals",
+        "Thyroid",
+        "Metabolic",
+        "Cardiovascular",
+        "Gut Health"
+      ],
+      "description": "Test category"
+    },
+    "price": {
+      "type": "number",
+      "description": "Price in USD"
+    },
+    "turnaround_days": {
+      "type": "number",
+      "description": "Estimated turnaround in business days"
+    },
+    "biomarkers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of biomarkers included in this test"
+    },
+    "popular": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to highlight as popular"
+    }
+  },
+  "required": [
+    "name",
+    "price",
+    "category"
+  ]
+}

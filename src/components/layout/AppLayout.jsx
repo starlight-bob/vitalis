@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X, BookOpen } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, TrendingUp, LogOut, Heart, Sparkles, Plug, FlaskConical, Dna, MoreHorizontal, X, BookOpen, TestTube2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
@@ -17,6 +17,7 @@ const PRIMARY_NAV_KEYS = [
 const MORE_NAV_KEYS = [
   { path: '/log', icon: PlusCircle, labelKey: 'logEntry' },
   { path: '/journal', icon: BookOpen, labelKey: 'journal' },
+  { path: '/advanced-labs', icon: TestTube2, label: 'Advanced Labs' },
   { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
   { path: '/labs', icon: FlaskConical, labelKey: 'labResults' },
 ];
@@ -27,6 +28,7 @@ const ALL_SIDEBAR_NAV_KEYS = [
   { path: '/trends', icon: TrendingUp, labelKey: 'trends' },
   { path: '/journal', icon: BookOpen, labelKey: 'journal' },
   { path: '/coach', icon: Sparkles, labelKey: 'healthCoach' },
+  { path: '/advanced-labs', icon: TestTube2, label: 'Advanced Labs' },
   { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
   { path: '/labs', icon: FlaskConical, labelKey: 'labResults' },
   { path: '/bio-age', icon: Dna, labelKey: 'biologicalAge' },
@@ -80,7 +82,7 @@ export default function AppLayout() {
                 )}
               >
                 <item.icon className="h-5 w-5" />
-                {t(item.labelKey)}
+                {item.label || t(item.labelKey)}
               </Link>
             );
           })}
@@ -184,7 +186,7 @@ export default function AppLayout() {
                   )}
                 >
                   <item.icon className="h-5 w-5" />
-                  {t(item.labelKey)}
+                  {item.label || t(item.labelKey)}
                 </Link>
               );
             })}

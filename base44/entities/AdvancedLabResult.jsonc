@@ -1,0 +1,81 @@
+{
+  "name": "AdvancedLabResult",
+  "type": "object",
+  "properties": {
+    "test_name": {
+      "type": "string",
+      "description": "Name of the test taken"
+    },
+    "test_id": {
+      "type": "string",
+      "description": "Reference to the LabTest entity id"
+    },
+    "date_completed": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the results were completed"
+    },
+    "date_ordered": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the test was ordered"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Processing",
+        "Normal",
+        "Review Needed",
+        "Action Required"
+      ],
+      "default": "Pending",
+      "description": "Overall result status"
+    },
+    "biomarkers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "range_low": {
+            "type": "number"
+          },
+          "range_high": {
+            "type": "number"
+          },
+          "flag": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "low",
+              "high",
+              "critical"
+            ]
+          }
+        }
+      },
+      "description": "Individual biomarker results"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Doctor or lab notes"
+    },
+    "order_id": {
+      "type": "string",
+      "description": "Payment/order reference"
+    }
+  },
+  "required": [
+    "test_name",
+    "status"
+  ]
+}

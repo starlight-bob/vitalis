@@ -22,6 +22,7 @@ const BiologicalAge  = lazy(() => import('@/pages/BiologicalAge'));
 const Account        = lazy(() => import('@/pages/Account'));
 const DeviceSettings = lazy(() => import('@/pages/DeviceSettings'));
 const Journal        = lazy(() => import('@/pages/Journal'));
+const AdvancedLabs   = lazy(() => import('@/pages/AdvancedLabs'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh]">
@@ -59,6 +60,7 @@ function AnimatedRoutes() {
             <Route path="/account" element={<Account />} />
             <Route path="/device-settings" element={<DeviceSettings />} />
             <Route path="/journal" element={<Journal />} />
+            <Route path="/advanced-labs" element={<AdvancedLabs />} />
           </Routes>
         </Suspense>
       </motion.div>
