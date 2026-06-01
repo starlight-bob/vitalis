@@ -17,7 +17,7 @@ const PRIMARY_NAV_KEYS = [
 const MORE_NAV_KEYS = [
   { path: '/log', icon: PlusCircle, labelKey: 'logEntry' },
   { path: '/journal', icon: BookOpen, labelKey: 'journal' },
-  { path: '/advanced-labs', icon: TestTube2, label: 'Advanced Labs' },
+  { path: '/advanced-labs', icon: TestTube2, labelKey: 'advancedLabs' },
   { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
 ];
 
@@ -27,7 +27,7 @@ const ALL_SIDEBAR_NAV_KEYS = [
   { path: '/trends', icon: TrendingUp, labelKey: 'trends' },
   { path: '/journal', icon: BookOpen, labelKey: 'journal' },
   { path: '/coach', icon: Sparkles, labelKey: 'healthCoach' },
-  { path: '/advanced-labs', icon: TestTube2, label: 'Advanced Labs' },
+  { path: '/advanced-labs', icon: TestTube2, labelKey: 'advancedLabs' },
   { path: '/devices', icon: Plug, labelKey: 'connectDevices' },
   { path: '/bio-age', icon: Dna, labelKey: 'biologicalAge' },
 ];
@@ -80,7 +80,7 @@ export default function AppLayout() {
                 )}
               >
                 <item.icon className="h-5 w-5" />
-                {item.label || t(item.labelKey)}
+                {t(item.labelKey)}
               </Link>
             );
           })}
@@ -184,7 +184,7 @@ export default function AppLayout() {
                   )}
                 >
                   <item.icon className="h-5 w-5" />
-                  {item.label || t(item.labelKey)}
+                  {t(item.labelKey)}
                 </Link>
               );
             })}

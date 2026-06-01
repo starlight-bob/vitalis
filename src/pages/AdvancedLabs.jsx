@@ -75,7 +75,16 @@ const SAMPLE_TESTS = [
   },
 ];
 
-const CATEGORY_FILTERS = ['All', 'Blood Panel', 'Hormone Panel', 'Vitamin & Minerals', 'Thyroid', 'Metabolic', 'Cardiovascular', 'Gut Health'];
+const CATEGORY_FILTER_KEYS = [
+  { key: 'All',                labelKey: 'catFilterAll' },
+  { key: 'Blood Panel',        labelKey: 'catFilterBloodPanel' },
+  { key: 'Hormone Panel',      labelKey: 'catFilterHormone' },
+  { key: 'Vitamin & Minerals', labelKey: 'catFilterVitamins' },
+  { key: 'Thyroid',            labelKey: 'catFilterThyroid' },
+  { key: 'Metabolic',          labelKey: 'catFilterMetabolic' },
+  { key: 'Cardiovascular',     labelKey: 'catFilterCardio' },
+  { key: 'Gut Health',         labelKey: 'catFilterGut' },
+];
 
 export default function AdvancedLabs() {
   const { t } = useLanguage();
@@ -193,18 +202,18 @@ export default function AdvancedLabs() {
           >
             {/* Category filter */}
             <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-              {CATEGORY_FILTERS.map(cat => (
+              {CATEGORY_FILTER_KEYS.map(cat => (
                 <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  key={cat.key}
+                  onClick={() => setActiveCategory(cat.key)}
                   className={cn(
                     'flex-shrink-0 text-xs px-3 py-1.5 rounded-full border font-medium transition-all',
-                    activeCategory === cat
+                    activeCategory === cat.key
                       ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                       : 'bg-card text-muted-foreground border-border hover:border-primary/30 hover:text-foreground'
                   )}
                 >
-                  {cat}
+                  {t(cat.labelKey)}
                 </button>
               ))}
             </div>
