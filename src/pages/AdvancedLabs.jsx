@@ -24,7 +24,7 @@ const LAB_CATEGORY_KEYS = [
   { key: 'Other',         labelKey: 'catOther' },
 ];
 
-const SAMPLE_TESTS = [
+const SAMPLE_TESTS_EN = [
   {
     id: 'sample-1', name: 'Comprehensive Blood Panel', category: 'Blood Panel', price: 89,
     description: 'A full metabolic panel covering CBC, lipids, liver, kidney function, and glucose.',
@@ -75,6 +75,57 @@ const SAMPLE_TESTS = [
   },
 ];
 
+const SAMPLE_TESTS_ZH = [
+  {
+    id: 'sample-1', name: '全面血液检查', category: '血液检查', price: 89,
+    description: '全面代谢检查，涵盖血常规、血脂、肝肾功能及血糖。',
+    turnaround_days: 3, popular: true,
+    biomarkers: ['白细胞', '红细胞', '血红蛋白', '血细胞比容', '血小板', '低密度脂蛋白', '高密度脂蛋白', '甘油三酯', '谷丙转氨酶', '谷草转氨酶', '肌酐', '血糖'],
+  },
+  {
+    id: 'sample-2', name: '激素检查（男性）', category: '激素检查', price: 129,
+    description: '全面男性激素评估，包括睾酮、雌激素和皮质醇。',
+    turnaround_days: 4, popular: true,
+    biomarkers: ['总睾酮', '游离睾酮', '雌二醇', '皮质醇', 'DHEA-S', '促黄体生成素', '促卵泡生成素'],
+  },
+  {
+    id: 'sample-3', name: '激素检查（女性）', category: '激素检查', price: 129,
+    description: '女性激素平衡检测，包括雌激素、孕酮和甲状腺指标。',
+    turnaround_days: 4,
+    biomarkers: ['雌二醇', '孕酮', '睾酮', '促黄体生成素', '促卵泡生成素', '促甲状腺激素', '皮质醇'],
+  },
+  {
+    id: 'sample-4', name: '维生素与矿物质筛查', category: '维生素与矿物质', price: 69,
+    description: '检测影响能量、免疫力和认知功能的关键维生素和矿物质。',
+    turnaround_days: 3,
+    biomarkers: ['维生素D', '维生素B12', '叶酸', '铁', '铁蛋白', '镁', '锌'],
+  },
+  {
+    id: 'sample-5', name: '甲状腺功能检查', category: '甲状腺', price: 59,
+    description: '全面甲状腺评估，检测甲减/甲亢和自身免疫性疾病。',
+    turnaround_days: 3,
+    biomarkers: ['促甲状腺激素', '游离三碘甲腺原氨酸', '游离甲状腺素', '抗甲状腺过氧化物酶抗体', '抗甲状腺球蛋白抗体'],
+  },
+  {
+    id: 'sample-6', name: '代谢与胰岛素抵抗', category: '代谢', price: 79,
+    description: '评估代谢健康、胰岛素敏感性及2型糖尿病风险。',
+    turnaround_days: 3,
+    biomarkers: ['空腹胰岛素', '糖化血红蛋白', '血糖', '胰岛素抵抗指数', '甘油三酯', '高密度脂蛋白'],
+  },
+  {
+    id: 'sample-7', name: '心血管风险检查', category: '心血管', price: 99,
+    description: '高级心脏标志物检测，超越常规血脂检查，全面评估心脏病风险。',
+    turnaround_days: 4, popular: true,
+    biomarkers: ['载脂蛋白B', '脂蛋白a', '高敏C反应蛋白', '同型半胱氨酸', '低密度脂蛋白颗粒数', '高密度脂蛋白', '甘油三酯'],
+  },
+  {
+    id: 'sample-8', name: '肠道健康筛查', category: '肠道健康', price: 149,
+    description: '评估肠道微生物多样性、炎症标志物及消化健康指标。',
+    turnaround_days: 7,
+    biomarkers: ['钙卫蛋白', '连蛋白', '分泌型免疫球蛋白A', '乳铁蛋白', '短链脂肪酸'],
+  },
+];
+
 const CATEGORY_FILTER_KEYS = [
   { key: 'All',                labelKey: 'catFilterAll' },
   { key: 'Blood Panel',        labelKey: 'catFilterBloodPanel' },
@@ -87,7 +138,7 @@ const CATEGORY_FILTER_KEYS = [
 ];
 
 export default function AdvancedLabs() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [activeTab, setActiveTab] = useState('shop');
   const [activeCategory, setActiveCategory] = useState('All');
   const [orderingTest, setOrderingTest] = useState(null);
@@ -119,7 +170,7 @@ export default function AdvancedLabs() {
 
   const results = Array.isArray(rawResults) ? rawResults : [];
   const labRecords = Array.isArray(rawLabRecords) ? rawLabRecords : [];
-  const catalog = dbTests.length > 0 ? dbTests : SAMPLE_TESTS;
+  const catalog = dbTests.length > 0 ? dbTests : (lang === 'zh' ? SAMPLE_TESTS_ZH : SAMPLE_TESTS_EN);
 
   const filteredLabRecords = useMemo(() => {
     return labRecords
